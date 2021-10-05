@@ -9,6 +9,27 @@ on:
     branches: [ master ]
 
 jobs:
+  netx:
+    runs-on: ubuntu-latest
+    container: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
+    steps:
+    - name: Checkout repository
+      # Use the old checkout v1 here. The newer v2 requires git 2.28 which is not available in the standard distribution.
+      uses: actions/checkout@v1
+      with:
+        submodules: recursive
+    - name: Build netX firmware
+      run: python3 mbs/mbs
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware
+        path: |
+          targets/plugins/romloader/usb/netx/usbmon_*.c
+          targets/plugins/romloader/usb/netx/usbmon_*.h
+          targets/plugins/romloader/uart/netx/uartmon_*.c
+          targets/plugins/romloader/uart/netx/uartmon_*.h
+          targets/plugins/romloader/jtag/netx/*/dcc_*.bin
   build:
     runs-on: ubuntu-latest
     strategy:
