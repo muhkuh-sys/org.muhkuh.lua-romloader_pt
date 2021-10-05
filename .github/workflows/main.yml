@@ -90,7 +90,7 @@ jobs:
       with:
         name: firmware
     - name: Depack firmware
-      run: ls -l firmware && file firmware && tar fvxz firmware
+      run: tar fvxz firmware/firmware.tar.gz
     - name: Build
       run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
