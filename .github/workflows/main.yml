@@ -24,12 +24,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: firmware
-        path: |
-          targets/plugins/romloader/usb/netx/usbmon_*.c
-          targets/plugins/romloader/usb/netx/usbmon_*.h
-          targets/plugins/romloader/uart/netx/uartmon_*.c
-          targets/plugins/romloader/uart/netx/uartmon_*.h
-          targets/plugins/romloader/jtag/netx/*/dcc_*.bin
+        path: targets/firmware.tar.gz
   build:
     needs: netxfirmware
     runs-on: ubuntu-latest
@@ -93,6 +88,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: firmware
+    - name: Depack firmware
+      run: tar fvxz targets/firmware.tar.gz
     - name: Build
       run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
