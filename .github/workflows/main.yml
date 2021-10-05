@@ -88,9 +88,8 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: firmware
-        path: targets/firmware.tar.gz
     - name: Depack firmware
-      run: tar fvxz targets/firmware.tar.gz
+      run: ls -l firmware && file firmware && tar fvxz firmware
     - name: Build
       run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }}
     - name: Upload artifacts
