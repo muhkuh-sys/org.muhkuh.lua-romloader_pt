@@ -85,7 +85,7 @@ jobs:
       with:
         submodules: recursive
     - name: Download firmware
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v1
       with:
         name: firmware
     - name: Depack firmware
