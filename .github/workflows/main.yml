@@ -9,7 +9,7 @@ on:
     branches: [ master ]
 
 jobs:
-  netx:
+  netxfirmware:
     runs-on: ubuntu-latest
     container: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
     steps:
@@ -31,6 +31,7 @@ jobs:
           targets/plugins/romloader/uart/netx/uartmon_*.h
           targets/plugins/romloader/jtag/netx/*/dcc_*.bin
   build:
+    needs: netxfirmware
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -83,6 +84,10 @@ jobs:
           cpu-architecture: x86_64
     container: ${{ matrix.platform.image }}
     steps:
+    - name: Download firmware
+      uses: actions/download-artifact@v2
+      with:
+        name: firmware
     - name: Checkout repository
       # Use the old checkout v1 here. The newer v2 requires git 2.28 which is not available in the standard distribution.
       uses: actions/checkout@v1
