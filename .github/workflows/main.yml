@@ -85,6 +85,7 @@ jobs:
       with:
         submodules: recursive
     - name: Download firmware
+      # Use the old download-artifact v1 here. The newer v2 does not work with 32bit containers.
       uses: actions/download-artifact@v1
       with:
         name: firmware
