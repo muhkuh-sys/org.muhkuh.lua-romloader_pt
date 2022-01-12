@@ -28,7 +28,6 @@ proc setup_interface_nxjtag_4000_usb {strLocation} {
 	transport select jtag
 	ftdi_device_desc "NXJTAG-4000-USB"
 	ftdi_vid_pid 0x1939 0x0301
-	adapter speed 1000
 
 	ftdi_layout_init 0x1B08 0x1F0B
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
@@ -43,11 +42,10 @@ proc setup_interface_nxhx_generic {strLocation} {
 	adapter usb location $strLocation
 	transport select jtag
 	ftdi_vid_pid 0x0640 0x0028
-	adapter speed 1000
-	
+
 	global ADAPTER_MAX_KHZ
 	set ADAPTER_MAX_KHZ 2000
-	
+
 	ftdi_layout_init 0x0108 0x010b
 	ftdi_layout_signal nTRST -data 0x0100
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
@@ -68,8 +66,7 @@ proc setup_interface_nxhx90_jtag {strLocation} {
 	transport select jtag
 	ftdi_device_desc "NXHX 90-JTAG"
 	ftdi_vid_pid 0x1939 0x002C
-	adapter speed 1000
-	
+
 	ftdi_layout_init 0x0308 0x030b
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200 
@@ -81,7 +78,6 @@ proc setup_interface_nxhx90_drive {strLocation} {
 	transport select jtag
 	ftdi_device_desc "NXHX 90-DRIVE"
 	ftdi_vid_pid 0x1939 0x0031
-	adapter speed 1000
 
 	ftdi_layout_init 0x0308 0x030b
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
@@ -95,8 +91,7 @@ proc setup_interface_nrpeb_h90_re {strLocation} {
 	transport select jtag
 	ftdi_device_desc "NRPEB H90-RE"
 	ftdi_vid_pid 0x1939 0x0029
-	adapter speed 1000
-	
+
 	ftdi_layout_init 0x0308 0x030b
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200 
@@ -108,8 +103,7 @@ proc setup_interface_nxjtag_usb {strLocation} {
 	transport select jtag
 	ftdi_device_desc "NXJTAG-USB"
 	ftdi_vid_pid 0x1939 0x0023
-	adapter speed 1000
-	
+
 	ftdi_layout_init 0x0308 0x030b
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
@@ -125,8 +119,7 @@ proc setup_interface_olimex_arm_usb_tiny_h {strLocation} {
 	transport select jtag
 	ftdi_device_desc "Olimex OpenOCD JTAG ARM-USB-TINY-H"
 	ftdi_vid_pid 0x15ba 0x002a
-	adapter speed 1000
-	
+
 	ftdi_layout_init 0x0808 0x0a1b
 	ftdi_layout_signal nSRST -oe 0x0200
 	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
@@ -140,11 +133,10 @@ proc setup_interface_jtagkey {strLocation} {
 	transport select jtag
 	ftdi_device_desc "Amontec JTAGkey"
 	ftdi_vid_pid 0x0403 0xcff8
-	adapter speed 1000
-	
+
 	global ADAPTER_MAX_KHZ
 	set ADAPTER_MAX_KHZ 2000
-	
+
 	ftdi_layout_init 0x0c08 0x0f1b
 	ftdi_layout_signal nTRST -data 0x0100 -noe 0x0400
 	ftdi_layout_signal nSRST -data 0x0200 -noe 0x0800
@@ -153,7 +145,6 @@ proc setup_interface_jtagkey {strLocation} {
 proc setup_interface_jlink {} {
 	adapter driver jlink
 	transport select jtag
-	adapter speed 1000
 }
 
 # Configure an interface.
@@ -164,6 +155,9 @@ proc setup_interface {strInterfaceID strLocation} {
 	gdb_port disabled
 	tcl_port disabled
 	telnet_port disabled
+
+	# Set the initial adapter speed to 50kHz.
+	adapter speed 50
 
 	if       {$strInterfaceID == "NXJTAG-USB"}            {setup_interface_nxjtag_usb $strLocation
 	} elseif {$strInterfaceID == "Olimex_ARM_USB_TINY_H"} {setup_interface_olimex_arm_usb_tiny_h $strLocation
@@ -310,7 +304,6 @@ proc probe_cpu {strCpuID} {
 	# netx 90
 	} elseif { $strCpuID == "netX90_COM" } {
 		echo "+ probe_cpu netX90_COM"
-		adapter speed 50
 		jtag newtap netx90 dap -expected-id 0x6ba00477 -irlen 4
 		jtag newtap netx90 tap -expected-id 0x10a046ad -irlen 4
 		jtag configure netx90.dap -event setup { global SC_CFG_RESULT ; echo {Yay - setup netx 90} ; set SC_CFG_RESULT {OK} }
@@ -329,7 +322,6 @@ proc probe_cpu {strCpuID} {
 	# netIOL
 	} elseif { $strCpuID == "netIOL"} {
 		echo "+ probe_cpu netIOL"
-		adapter speed 1000
 		
 		jtag newtap netIOL cpu -expected-id 0x101026ad -irlen 4 -ircapture 0x1 -irmask 0xf 
 		jtag configure netIOL.cpu -event setup { global SC_CFG_RESULT ; echo {Yay - setup netIOL} ; set SC_CFG_RESULT {OK} }
