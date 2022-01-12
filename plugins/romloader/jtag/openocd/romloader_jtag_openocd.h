@@ -6,6 +6,7 @@
 
 #include "../../romloader_def.h"
 #include "../../../muhkuh_log.h"
+#include "../romloader_jtag_options.h"
 
 #include <libusb.h>
 #if (!defined(LIBUSB_API_VERSION)) || (defined(LIBUSB_API_VERSION) && LIBUSB_API_VERSION<0x01000102)
@@ -28,7 +29,7 @@ typedef int (*PFN_MUHKUH_CALL_PRINT_CALLBACK) (void *pvCallbackUserData, uint8_t
 class romloader_jtag_openocd
 {
 public:
-	romloader_jtag_openocd(muhkuh_log *ptLog);
+	romloader_jtag_openocd(muhkuh_log *ptLog, romloader_jtag_options *ptOptions);
 	~romloader_jtag_openocd(void);
 
 
@@ -191,6 +192,8 @@ private:
 	libusb_context *m_ptLibUsbContext;
 
 	muhkuh_log *m_ptLog;
+
+	romloader_jtag_options *m_ptOptions;
 
 	void get_plugin_path(void);
 	void get_openocd_path(void);

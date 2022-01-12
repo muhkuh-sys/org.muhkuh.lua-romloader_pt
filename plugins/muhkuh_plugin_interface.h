@@ -23,6 +23,7 @@
 #include <stddef.h>
 
 #include "muhkuh_log.h"
+#include "muhkuh_plugin_options.h"
 
 #ifndef __MUHKUH_PLUGIN_INTERFACE__
 #define __MUHKUH_PLUGIN_INTERFACE__
@@ -73,24 +74,6 @@ typedef struct
 	unsigned int uiVersionMinor;
 	unsigned int uiVersionSub;
 } muhkuh_plugin_version;
-
-
-/*-----------------------------------*/
-
-
-class muhkuh_plugin_options
-{
-public:
-	muhkuh_plugin_options(muhkuh_log *ptLog);
-	muhkuh_plugin_options(const muhkuh_plugin_options *ptCloneMe);
-	~muhkuh_plugin_options(void);
-
-	void setLog(muhkuh_log *ptLog);
-	virtual void set_option(const char *pcKey, lua_State *ptLuaState, int iIndex) = 0;
-
-protected:
-	muhkuh_log *m_ptLog;
-};
 
 
 /*-----------------------------------*/

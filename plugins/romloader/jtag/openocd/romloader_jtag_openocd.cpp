@@ -21,7 +21,7 @@
 
 
 
-romloader_jtag_openocd::romloader_jtag_openocd(muhkuh_log *ptLog)
+romloader_jtag_openocd::romloader_jtag_openocd(muhkuh_log *ptLog, romloader_jtag_options *ptOptions)
  : fJtagDeviceIsConnected(false)
  , m_ptDetected(NULL)
  , m_sizDetectedCnt(0)
@@ -31,10 +31,12 @@ romloader_jtag_openocd::romloader_jtag_openocd(muhkuh_log *ptLog)
  , m_pcOpenocdSharedObjectPath(NULL)
  , m_ptLibUsbContext(NULL)
  , m_ptLog(NULL)
+ , m_ptOptions(NULL)
 {
 	memset(&m_tJtagDevice, 0, sizeof(ROMLOADER_JTAG_DEVICE_T));
 
 	m_ptLog = ptLog;
+	m_ptOptions = ptOptions;
 
 	libusb_init(&m_ptLibUsbContext);
 	libusb_set_option(m_ptLibUsbContext, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
@@ -501,6 +503,7 @@ int romloader_jtag_openocd::openocd_open(ROMLOADER_JTAG_DEVICE_T *ptDevice)
 	void *pvFn;
 	void *pvOpenocdContext;
 	char acError[1024];
+	char acTclCmd[1024];
 
 
 	/* Be optimistic. */
@@ -550,12 +553,34 @@ int romloader_jtag_openocd::openocd_open(ROMLOADER_JTAG_DEVICE_T *ptDevice)
 			{
 				ptDevice->pvOpenocdContext = pvOpenocdContext;
 
-				m_ptLog->debug("Loading script.");
-				iResult = ptDevice->tFunctions.tFn.pfnCommandRunLine(ptDevice->pvOpenocdContext, "source [find jtag_detect_init.tcl]");
-				if( iResult!=0 )
+				if( m_ptOptions==NULL )
 				{
-					m_ptLog->fatal("Failed to load the script: %d", iResult);
-					iResult = -1;
+					m_ptLog->debug("No options to set.");
+				}
+				else
+				{
+					m_ptLog->debug("Setting options.");
+					snprintf(acTclCmd, sizeof(acTclCmd),
+					         "set __JTAG_RESET__ %d\nset __JTAG_SPEED__ %ld\n",
+					         m_ptOptions->getOption_jtagReset(),
+					         m_ptOptions->getOption_jtagFrequencyKhz()
+					);
+					iResult = ptDevice->tFunctions.tFn.pfnCommandRunLine(ptDevice->pvOpenocdContext, acTclCmd);
+					if( iResult!=0 )
+					{
+						m_ptLog->fatal("Failed to set the options: %d", iResult);
+						iResult = -1;
+					}
+				}
+				if( iResult==0 )
+				{
+					m_ptLog->debug("Loading script.");
+					iResult = ptDevice->tFunctions.tFn.pfnCommandRunLine(ptDevice->pvOpenocdContext, "source [find jtag_detect_init.tcl]");
+					if( iResult!=0 )
+					{
+						m_ptLog->fatal("Failed to load the script: %d", iResult);
+						iResult = -1;
+					}
 				}
 			}
 		}

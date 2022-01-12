@@ -17,6 +17,7 @@ INCLUDE(${SWIG_USE_FILE})
 
 SET(romloader_jtag_SOURCES
 	romloader_jtag_main.cpp
+    romloader_jtag_options.cpp
 )
 
 SET(romloader_jtag_HEADERS
