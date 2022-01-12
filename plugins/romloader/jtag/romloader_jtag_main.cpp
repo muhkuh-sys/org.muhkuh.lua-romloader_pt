@@ -70,7 +70,7 @@ public:
 
 		ulValue = m_ptJtagDevice->read_data32(m_ptClientData, ulAddress);
 		*pulValue = ulValue;
-		
+
 		return true;
 	}
 
@@ -86,7 +86,7 @@ private:
 
 romloader_jtag_options::romloader_jtag_options(muhkuh_log *ptLog)
  : muhkuh_plugin_options(ptLog)
- , m_tOption_jtagReset(JTAG_RESET_HardReset)
+ , m_tOption_jtagReset(JTAG_RESET_Attach)
  , m_tOption_jtagFrequencyKhz(0)
 {
 }
