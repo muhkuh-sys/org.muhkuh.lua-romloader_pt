@@ -544,12 +544,14 @@ void romloader_jtag::Disconnect(lua_State *ptClientData)
 
 romloader::TRANSPORTSTATUS_T romloader_jtag::send_raw_packet(const void *pvPacket, size_t sizPacket)
 {
+	return TRANSPORTSTATUS_SEND_FAILED;
 }
 
 
 
 romloader::TRANSPORTSTATUS_T romloader_jtag::receive_packet(void)
 {
+	return TRANSPORTSTATUS_RECEIVE_FAILED;
 }
 
 
