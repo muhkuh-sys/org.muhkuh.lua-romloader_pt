@@ -1534,6 +1534,6 @@ void romloader_jtag_openocd::local_openocd_output_handler(const char *pcLine, si
 	char acFormat[16];
 
 
-	snprintf(acFormat, sizeof(acFormat), "%%%zds", sizLine);
+	snprintf(acFormat, sizeof(acFormat), "%%.%zds", sizLine);
 	m_ptLog->debug(acFormat, pcLine);
 }
