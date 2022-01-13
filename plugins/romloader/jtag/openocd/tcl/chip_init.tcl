@@ -418,10 +418,20 @@ proc init_chip {iChiptyp} {
 		arm7_9 dcc_downloads enable
 		arm7_9 fast_memory_access enable
 	}
-	
-	puts "Max. frequency for adapter:  $ADAPTER_MAX_KHZ kHz"
-	puts "Max. JTAG frequency for CPU: $JTAG_MAX_KHZ kHz"
-	adapter_khz [min $JTAG_MAX_KHZ $ADAPTER_MAX_KHZ]
+
+	global __JTAG_SPEED__
+	# Get a pretty-print variant of the JTAG speed limitation.
+	# A limit of 0 means "no limitation".
+	set strPrettyJtagSpeed [if {$__JTAG_SPEED__ eq 0} {list none} else {format "%d kHz" $__JTAG_SPEED__}]
+	puts [format "Max. frequency for adapter:  %d kHz" $ADAPTER_MAX_KHZ]
+	puts [format "Max. JTAG frequency for CPU: %d kHz" $JTAG_MAX_KHZ]
+	puts [format "Speed limit:                 %s" $strPrettyJtagSpeed]
+	set uiNewSpeedKhz [min $JTAG_MAX_KHZ $ADAPTER_MAX_KHZ]
+	if {$__JTAG_SPEED__ ne 0} {
+		set uiNewSpeedKhz [min $uiNewSpeedKhz $__JTAG_SPEED__]
+	}
+	puts "Set the adapter speed to $uiNewSpeedKhz kHz."
+	adapter speed $uiNewSpeedKhz
 }
 
 
