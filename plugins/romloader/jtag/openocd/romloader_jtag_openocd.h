@@ -39,21 +39,6 @@ public:
 		size_t sizPointerOffset;
 	} OPENOCD_NAME_RESOLVE_T;
 
-	typedef struct INTERFACE_SETUP_STRUCT
-	{
-		const char *pcID;
-		const char *pcCode_Setup;
-		const char *pcCode_Probe;
-		unsigned short usUsbVendorId;
-		unsigned short usUsbDeviceId;
-	} INTERFACE_SETUP_STRUCT_T;
-
-	typedef struct TARGET_SETUP_STRUCT
-	{
-		const char *pcID;
-		const char *pcCode;
-	} TARGET_SETUP_STRUCT_T;
-
 	typedef void (*PFN_MUHKUH_OPENOCD_OUTPUT_HANDLER_T) (void *pvUser, const char *pcLine, size_t sizLine);
 
 	typedef void * (*PFN_MUHKUH_OPENOCD_INIT_T) (const char *pcScriptSearchDir, PFN_MUHKUH_OPENOCD_OUTPUT_HANDLER_T pfnOutputHandler, void *pvOutputHanderData);
@@ -111,14 +96,14 @@ public:
 		char *pcLocation;
 	} ROMLOADER_JTAG_DETECT_ENTRY_T;
 
-	typedef struct ROMLOADER_JTAG_MATCHING_USB_LOCATIONS_STRUCT
+	typedef struct ROMLOADER_JTAG_SCAN_USB_RESULT_STRUCT
 	{
-		const INTERFACE_SETUP_STRUCT_T *ptIfSetup;
-		unsigned char ucUsbBusNumber;
-		size_t sizUsbPortNumbers;
-		unsigned char aucUsbPortNumbers[USB_MAX_PATH_ELEMENTS];
-		char acPathString[USB_MAX_PATH_ELEMENTS * 4 + 4] = {0};
-	} ROMLOADER_JTAG_MATCHING_USB_LOCATIONS_T;
+		const char *pcName;
+		const char *pcLocation;
+		unsigned int uiIndex;
+		uint16_t usVID;
+		uint16_t usPID;
+	} ROMLOADER_JTAG_SCAN_USB_RESULT_T;
 
 	int initialize(void);
 	int detect(ROMLOADER_JTAG_DETECT_ENTRY_T **pptEntries, size_t *psizEntries);
@@ -163,10 +148,6 @@ public:
 private:
 	static const OPENOCD_NAME_RESOLVE_T atOpenOcdResolve[13];
 
-	static const INTERFACE_SETUP_STRUCT_T atInterfaceCfg[10];
-
-	static const TARGET_SETUP_STRUCT_T atTargetCfg[6];
-
 	static const char *pcResetCode;
 
 	/* This is the path to the folder where the romloader_jtag plugin, the
@@ -205,12 +186,12 @@ private:
 	void openocd_close(ROMLOADER_JTAG_DEVICE_T *ptDevice);
 	int romloader_jtag_openocd_init(void);
 
-	int setup_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, const INTERFACE_SETUP_STRUCT_T *ptIfCfg, const char *pcLocation);
-	int probe_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, ROMLOADER_JTAG_MATCHING_USB_LOCATIONS_T *ptLocation);
-	const INTERFACE_SETUP_STRUCT_T *find_interface(const char *pcInterfaceName);
-	int probe_target(ROMLOADER_JTAG_DEVICE_T *ptDevice, const INTERFACE_SETUP_STRUCT_T *ptIfSetup, const char *pcLocation, const TARGET_SETUP_STRUCT_T *ptTargetCfg);
-	int detect_target(ROMLOADER_JTAG_MATCHING_USB_LOCATIONS_T *ptLocation);
-	const TARGET_SETUP_STRUCT_T *find_target(const char *pcTargetName);
+	int parse_scan_usb_result(const char *pcBuffer, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptEntries, size_t sizEntriesMax, size_t *psizEntries);
+
+	int setup_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, const char *pcInterfaceName, const char *pcInterfaceLocation);
+	int probe_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptLocation);
+	int probe_target(ROMLOADER_JTAG_DEVICE_T *ptDevice, const char *pcInterfaceName, const char *pcInterfaceLocation, const char *pcCpuName);
+	int detect_target(ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptLocation);
 };
 
 
