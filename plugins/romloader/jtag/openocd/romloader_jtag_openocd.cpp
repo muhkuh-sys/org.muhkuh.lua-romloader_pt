@@ -882,10 +882,10 @@ int romloader_jtag_openocd::detect_target(ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptLo
 }
 
 
-int romloader_jtag_openocd::parse_scan_usb_result(const char *pcBuffer, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptEntries, size_t sizEntriesMax, size_t *psizEntries)
+int romloader_jtag_openocd::parse_scan_usb_result(char *pcBuffer, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptEntries, size_t sizEntriesMax, size_t *psizEntries)
 {
-	const char *pcCnt;
-	const char *pcName;
+	char *pcCnt;
+	char *pcName;
 	size_t sizName;
 	char c;
 	int iResult;
@@ -897,6 +897,10 @@ int romloader_jtag_openocd::parse_scan_usb_result(const char *pcBuffer, ROMLOADE
 	unsigned int uiVID;
 	unsigned int uiPID;
 	int iConsumed;
+	int iPosBeforeLocation;
+	int iPosAfterLocation;
+	char *pcLocation;
+	size_t sizLocation;
 	char acLocation[4 + USB_MAX_PATH_ELEMENTS * 4 + 1];
 
 
@@ -1000,15 +1004,18 @@ int romloader_jtag_openocd::parse_scan_usb_result(const char *pcBuffer, ROMLOADE
 		}
 
 		/* Parse a number.
-			* Note that the "%n" does not increase the number of results.
-			*/
-		iScanResult = sscanf(pcCnt, " %x %x %s %u%n", &uiVID, &uiPID, acLocation, &uiIndex, &iConsumed);
+		 * Note that the "%n" does not increase the number of results.
+		 */
+		iScanResult = sscanf(pcCnt, " %x %x %n%s%n %u%n", &uiVID, &uiPID, &iPosBeforeLocation, acLocation, &iPosAfterLocation, &uiIndex, &iConsumed);
 		if( iScanResult!=4 )
 		{
 			m_ptLog->debug("Failed to parse the rest of entry %d. Parsed %d entries.", sizEntries, iScanResult);
 			iResult = -1;
 			break;
 		}
+		/* Get a pointer to the location string and the size of the string. */
+		pcLocation = pcCnt + iPosBeforeLocation;
+		sizLocation = iPosAfterLocation - iPosBeforeLocation;
 
 		/* Skip the consumed chars. */
 		pcCnt += iConsumed;
@@ -1028,8 +1035,12 @@ int romloader_jtag_openocd::parse_scan_usb_result(const char *pcBuffer, ROMLOADE
 		}
 		++pcCnt;
 
-		ptEntryCnt->pcName = strndup(pcName, sizName);
-		ptEntryCnt->pcLocation = strndup(acLocation, sizeof(acLocation));
+		/* Insert a terminating 0 after the name and the location. */
+		pcName[sizName] = '\0';
+		pcLocation[sizLocation] = '\0';
+
+		ptEntryCnt->pcName = pcName;
+		ptEntryCnt->pcLocation = pcLocation;
 		ptEntryCnt->uiIndex = uiIndex;
 		ptEntryCnt->usVID = (uint16_t)(uiVID & 0xffffU);
 		ptEntryCnt->usPID = (uint16_t)(uiPID & 0xffffU);

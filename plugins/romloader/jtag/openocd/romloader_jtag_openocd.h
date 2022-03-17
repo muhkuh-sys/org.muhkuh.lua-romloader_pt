@@ -186,7 +186,7 @@ private:
 	void openocd_close(ROMLOADER_JTAG_DEVICE_T *ptDevice);
 	int romloader_jtag_openocd_init(void);
 
-	int parse_scan_usb_result(const char *pcBuffer, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptEntries, size_t sizEntriesMax, size_t *psizEntries);
+	int parse_scan_usb_result(char *pcBuffer, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptEntries, size_t sizEntriesMax, size_t *psizEntries);
 
 	int setup_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, const char *pcInterfaceName, const char *pcInterfaceLocation);
 	int probe_interface(ROMLOADER_JTAG_DEVICE_T *ptDevice, ROMLOADER_JTAG_SCAN_USB_RESULT_T *ptLocation);
