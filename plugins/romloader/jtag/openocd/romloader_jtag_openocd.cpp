@@ -1233,64 +1233,67 @@ int romloader_jtag_openocd::detect(ROMLOADER_JTAG_DETECT_ENTRY_T **pptEntries, s
 				{
 					m_ptLog->fatal("Failed to parse the result of scan_usb.");
 				}
-
-				/* Initialize the result array. */
-				m_sizDetectedCnt = 0;
-				m_sizDetectedMax = sizLocations;
-
-				m_ptDetected = (ROMLOADER_JTAG_DETECT_ENTRY_T*)malloc(m_sizDetectedMax*sizeof(ROMLOADER_JTAG_DETECT_ENTRY_T));
-				if( m_ptDetected==NULL )
-				{
-					m_ptLog->fatal("Failed to allocate %zd bytes of memory for the detection results!", m_sizDetectedMax*sizeof(ROMLOADER_JTAG_DETECT_ENTRY_T));
-				}
 				else
 				{
-					/* Run the command chunks of all locations to see which interfaces are present. */
-					ptUsbScanResultCnt = atUsbScanResults;
-					ptUsbScanResultEnd = atUsbScanResults + sizLocations;
-					while( ptUsbScanResultCnt<ptUsbScanResultEnd )
+					/* Initialize the result array. */
+					m_sizDetectedCnt = 0;
+					m_sizDetectedMax = sizLocations;
+
+					m_ptDetected = (ROMLOADER_JTAG_DETECT_ENTRY_T*)malloc(m_sizDetectedMax*sizeof(ROMLOADER_JTAG_DETECT_ENTRY_T));
+					if( m_ptDetected==NULL )
 					{
-						m_ptLog->debug("Detecting interface '%s' on path %s.", ptUsbScanResultCnt->pcName, ptUsbScanResultCnt->pcLocation);
-
-						/* Open the shared library. */
-						iResult = openocd_open(&tDevice);
-						if( iResult!=0 )
+						iResult = -1;
+						m_ptLog->fatal("Failed to allocate %zd bytes of memory for the detection results!", m_sizDetectedMax*sizeof(ROMLOADER_JTAG_DETECT_ENTRY_T));
+					}
+					else
+					{
+						/* Run the command chunks of all locations to see which interfaces are present. */
+						ptUsbScanResultCnt = atUsbScanResults;
+						ptUsbScanResultEnd = atUsbScanResults + sizLocations;
+						while( ptUsbScanResultCnt<ptUsbScanResultEnd )
 						{
-							/* This is a fatal error. */
-							iResult = -1;
-							break;
-						}
-						else
-						{
-							/* Detect the interface. */
-							iResult = probe_interface(&tDevice, ptUsbScanResultCnt);
+							m_ptLog->debug("Detecting interface '%s' on path %s.", ptUsbScanResultCnt->pcName, ptUsbScanResultCnt->pcLocation);
 
-							/* Clean up after the detection. */
-							openocd_close(&tDevice);
-
-							if( iResult==0 )
-							{
-								/* Detect the CPU on this interface. */
-								iResult = detect_target(ptUsbScanResultCnt);
-							}
-
-							/* Ignore non-fatal errors.
-							* They indicate that the current interface could not be detected.
-							*/
-							if( iResult>0 )
-							{
-								iResult = 0;
-							}
-							/* Do not continue with other interfaces if a fatal error occurred. */
-							else if( iResult<0 )
+							/* Open the shared library. */
+							iResult = openocd_open(&tDevice);
+							if( iResult!=0 )
 							{
 								/* This is a fatal error. */
+								iResult = -1;
 								break;
 							}
-						}
+							else
+							{
+								/* Detect the interface. */
+								iResult = probe_interface(&tDevice, ptUsbScanResultCnt);
 
-						/* Move to the next location. */
-						++ptUsbScanResultCnt;
+								/* Clean up after the detection. */
+								openocd_close(&tDevice);
+
+								if( iResult==0 )
+								{
+									/* Detect the CPU on this interface. */
+									iResult = detect_target(ptUsbScanResultCnt);
+								}
+
+								/* Ignore non-fatal errors.
+								* They indicate that the current interface could not be detected.
+								*/
+								if( iResult>0 )
+								{
+									iResult = 0;
+								}
+								/* Do not continue with other interfaces if a fatal error occurred. */
+								else if( iResult<0 )
+								{
+									/* This is a fatal error. */
+									break;
+								}
+							}
+
+							/* Move to the next location. */
+							++ptUsbScanResultCnt;
+						}
 					}
 				}
 			}
