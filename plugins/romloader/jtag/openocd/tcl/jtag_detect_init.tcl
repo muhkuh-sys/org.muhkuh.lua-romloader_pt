@@ -472,7 +472,6 @@ proc probe_cpu {strCpu} {
 	if { $tKnownCpu=={} } {
 		return -code error "Unknown CPU ID."
 	}
-	echo "probe_cpu $strPrettyName"
 
 	# Call the CPU specific setup function.
 	[lindex $tKnownCpu 1]
