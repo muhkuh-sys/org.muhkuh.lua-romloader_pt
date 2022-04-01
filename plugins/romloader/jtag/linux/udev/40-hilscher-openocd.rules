@@ -26,9 +26,11 @@ ATTRS{idVendor}=="1939", ATTRS{idProduct}=="0301", MODE="660", GROUP="plugdev", 
 
 # The following devices have a UART connected to the 2nd port of the FTDI chip. Add the USB VID/PID to the ftdi_sio driver.
 ACTION=="add", ATTRS{idVendor}=="1939", ATTRS{idProduct}=="0031", MODE="660", GROUP="plugdev", TAG+="uaccess", RUN+="/sbin/modprobe ftdi-sio", RUN+="/bin/sh -c 'echo $attr{idVendor} $attr{idProduct} > /sys/bus/usb-serial/drivers/ftdi_sio/new_id'"
+ACTION=="add", ATTRS{idVendor}=="1939", ATTRS{idProduct}=="0032", MODE="660", GROUP="plugdev", TAG+="uaccess", RUN+="/sbin/modprobe ftdi-sio", RUN+="/bin/sh -c 'echo $attr{idVendor} $attr{idProduct} > /sys/bus/usb-serial/drivers/ftdi_sio/new_id'"
 
 # Unbind the ftdi_sio driver from the 1st interface.
 ACTION=="bind", ATTRS{idVendor}=="1939", ATTRS{idProduct}=="0031", ATTR{bInterfaceNumber}=="00", RUN+="/bin/sh -c 'echo $kernel >> /sys/bus/usb/drivers/ftdi_sio/unbind'"
+ACTION=="bind", ATTRS{idVendor}=="1939", ATTRS{idProduct}=="0032", ATTR{bInterfaceNumber}=="00", RUN+="/bin/sh -c 'echo $kernel >> /sys/bus/usb/drivers/ftdi_sio/unbind'"
 
 LABEL="hilscher_openocd_rules_end"
 
