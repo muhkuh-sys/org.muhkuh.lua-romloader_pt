@@ -28,7 +28,8 @@ set KNOWN_USB_DEVICES {
 	{"Olimex_ARM_USB_TINY_H"  0x15ba  0x002a setup_interface_olimex_arm_usb_tiny_h}
 	{"NXHX_500_50_51_10"      0x0640  0x0028 setup_interface_nxhx_generic}
 	{"NXHX_90-JTAG"           0x1939  0x002c setup_interface_nxhx90_jtag}
-	{"NXHX_90-DRIVE"          0x1939  0x0031 setup_interface_nxhx90_drive}
+	{"NXHX_90-MC"             0x1939  0x0031 setup_interface_nxhx90_mc}
+	{"NXEB_90-SPE"            0x1939  0x0032 setup_interface_nxeb90_spe}
 	{"NRPEB_H90-RE"           0x1939  0x0029 setup_interface_nrpeb_h90_re}
 	{"NXJTAG-4000-USB"        0x1939  0x0301 setup_interface_nxjtag_4000_usb}
 	{"J-Link"                 0x1366  0x0101 setup_interface_jlink}
@@ -126,11 +127,11 @@ proc setup_interface_nxhx90_jtag {strLocation} {
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
-proc setup_interface_nxhx90_drive {strLocation} {
+proc setup_interface_nxhx90_mc {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXHX 90-DRIVE"
+	ftdi_device_desc "NXHX 90-MC"
 	ftdi_vid_pid 0x1939 0x0031
 
 	ftdi_layout_init 0x0308 0x030b
@@ -138,6 +139,17 @@ proc setup_interface_nxhx90_drive {strLocation} {
 	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
+proc setup_interface_nxeb90_spe {strLocation} {
+	adapter driver ftdi
+	adapter usb location $strLocation
+	transport select jtag
+	ftdi_device_desc "NXEB 90-SPE"
+	ftdi_vid_pid 0x1939 0x0032
+
+	ftdi_layout_init 0x0308 0x030b
+	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+}
 
 proc setup_interface_nrpeb_h90_re {strLocation} {
 	adapter driver ftdi
