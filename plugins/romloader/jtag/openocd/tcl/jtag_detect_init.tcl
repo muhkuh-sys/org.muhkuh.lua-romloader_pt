@@ -4,12 +4,6 @@ source [find netx_swreset.tcl]
 
 puts "__JTAG_RESET__ = $__JTAG_RESET__"
 puts "__JTAG_SPEED__ = $__JTAG_SPEED__"
-# HardReset
-#set __JTAG_RESET__ 0
-# SoftReset
-#set __JTAG_RESET__ 1
-# Attach
-#set __JTAG_RESET__ 2
 
 
 # todo/wishlist:
