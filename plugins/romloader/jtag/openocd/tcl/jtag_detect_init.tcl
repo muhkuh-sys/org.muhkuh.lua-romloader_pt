@@ -34,6 +34,7 @@ set KNOWN_USB_DEVICES {
 	{"NXJTAG-4000-USB"        0x1939  0x0301 setup_interface_nxjtag_4000_usb}
 	{"J-Link"                 0x1366  0x0101 setup_interface_jlink}
 	{"J-Link"                 0x1366  0x0105 setup_interface_jlink}
+    {"netSHIELD90"            0x1939  0x0034 setup_interface_netSHIELD90}
 }
 
 proc scan_usb {atUsbDevices} {
@@ -211,6 +212,18 @@ proc setup_interface_jtagkey {strLocation} {
 proc setup_interface_jlink {} {
 	adapter driver jlink
 	transport select jtag
+}
+
+proc setup_interface_netSHIELD90 {strLocation} {
+	adapter driver ftdi
+	adapter usb location $strLocation
+	transport select jtag
+	ftdi_device_desc "NSHIELD 90"
+	ftdi_vid_pid 0x1939 0x0034
+
+	ftdi_layout_init 0x0308 0x030b
+	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 # Configure an interface.
