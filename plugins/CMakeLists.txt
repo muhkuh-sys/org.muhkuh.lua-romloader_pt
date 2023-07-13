@@ -83,29 +83,16 @@ SET(CPACK_PACKAGE_FILE_NAME "lua${BUILDCFG_LUA_VERSION}-romloader-${PROJECT_VERS
 SET(CPACK_GENERATOR "TXZ")
 INCLUDE(CPack)
 
-IF(JONCHKI_PLATFORM_DIST_ID STREQUAL "windows")
-	# Package a windows build.
+# Package a linux build.
 
-	# NOTE: No "INSTALL" here, they are in the sub folders.
+# NOTE: No "INSTALL" here, they are in the sub folders.
 
-	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_windows.lua
-	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	               @ONLY)
+CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
+               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+               @ONLY)
 
-	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	        DESTINATION .)
-ELSE(JONCHKI_PLATFORM_DIST_ID STREQUAL "windows")
-	# Package a linux build.
-
-	# NOTE: No "INSTALL" here, they are in the sub folders.
-
-	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
-	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	               @ONLY)
-
-	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-	        DESTINATION .)
-ENDIF(JONCHKI_PLATFORM_DIST_ID STREQUAL "windows")
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+        DESTINATION .)
 
 CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/romloader.xml
                ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-romloader-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
