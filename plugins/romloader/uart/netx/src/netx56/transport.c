@@ -25,6 +25,8 @@
 #include <stddef.h>
 #include <string.h>
 
+#include <netx_io_areas.h>
+
 #include "monitor.h"
 #include "monitor_commands.h"
 #include "systime.h"
