@@ -337,12 +337,12 @@ romloader_jtag *romloader_jtag_provider::ClaimInterface(const muhkuh_plugin_refe
 								memcpy(acTarget, pcTargetName, sizTargetName);
 								memcpy(acLocation, pcLocation, sizLocation);
 
-								fprintf(stderr, "Interface name: %s\n", acInterface);
-								fprintf(stderr, "Target name: %s\n", acTarget);
-								fprintf(stderr, "Location: %s\n", acLocation);
+//								fprintf(stderr, "Interface name: %s\n", acInterface);
+//								fprintf(stderr, "Target name: %s\n", acTarget);
+//								fprintf(stderr, "Location: %s\n", acLocation);
 
 								ptPlugin = new romloader_jtag(pcName, m_pcPluginId, this, acInterface, acTarget, acLocation);
-								printf("%s(%p): claim_interface(): claimed interface %s.\n", m_pcPluginId, this, pcName);
+//								printf("%s(%p): claim_interface(): claimed interface %s.\n", m_pcPluginId, this, pcName);
 							}
 						}
 					}
@@ -383,7 +383,7 @@ bool romloader_jtag_provider::ReleaseInterface(muhkuh_plugin *ptPlugin)
 		}
 		else
 		{
-			printf("%s(%p): released interface %s.\n", m_pcPluginId, this, pcName);
+//			printf("%s(%p): released interface %s.\n", m_pcPluginId, this, pcName);
 			fOk = true;
 		}
 	}
@@ -588,7 +588,7 @@ uint8_t romloader_jtag::read_data08(lua_State *ptClientData, uint32_t ulNetxAddr
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 
@@ -628,7 +628,7 @@ uint16_t romloader_jtag::read_data16(lua_State *ptClientData, uint32_t ulNetxAdd
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 
@@ -669,7 +669,7 @@ uint32_t romloader_jtag::read_data32(lua_State *ptClientData, uint32_t ulNetxAdd
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 
@@ -768,7 +768,7 @@ void romloader_jtag::read_image(uint32_t ulNetxAddress, uint32_t ulSize, char **
 		{
 			free(pucBufferStart);
 		}
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(tLuaFn.L);
 	}
 }
@@ -805,7 +805,7 @@ void romloader_jtag::write_data08(lua_State *ptClientData, uint32_t ulNetxAddres
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 }
@@ -842,7 +842,7 @@ void romloader_jtag::write_data16(lua_State *ptClientData, uint32_t ulNetxAddres
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 }
@@ -879,7 +879,7 @@ void romloader_jtag::write_data32(lua_State *ptClientData, uint32_t ulNetxAddres
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(ptClientData);
 	}
 }
@@ -952,7 +952,7 @@ void romloader_jtag::write_image(uint32_t ulNetxAddress, const char *pcBUFFER_IN
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(tLuaFn.L);
 	}
 }
@@ -1059,7 +1059,7 @@ void romloader_jtag::call(uint32_t ulNetxAddress, uint32_t ulParameterR0, SWIGLU
 
 	if( fOk!=true )
 	{
-		printf("Exit Error\n");
+//		printf("Exit Error\n");
 		MUHKUH_PLUGIN_EXIT_ERROR(tLuaFn.L);
 	}
 }
