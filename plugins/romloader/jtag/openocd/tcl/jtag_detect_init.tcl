@@ -82,98 +82,98 @@ proc setup_interface_nxjtag_4000_usb {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXJTAG-4000-USB"
-	ftdi_vid_pid 0x1939 0x0301
+	ftdi device_desc "NXJTAG-4000-USB"
+	ftdi vid_pid 0x1939 0x0301
 
-	ftdi_layout_init 0x1B08 0x1F0B
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
-	ftdi_layout_signal JSEL1 -data 0x0400 -oe 0x0400
-	ftdi_layout_signal VODIS -data 0x0800 -oe 0x0800
-	ftdi_layout_signal VOSWI -data 0x1000 -oe 0x1000
+	ftdi layout_init 0x1B08 0x1F0B
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_signal JSEL1 -data 0x0400 -oe 0x0400
+	ftdi layout_signal VODIS -data 0x0800 -oe 0x0800
+	ftdi layout_signal VOSWI -data 0x1000 -oe 0x1000
 }
 
 proc setup_interface_nxhx_generic {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_vid_pid 0x0640 0x0028
+	ftdi vid_pid 0x0640 0x0028
 
 	global ADAPTER_MAX_KHZ
 	set ADAPTER_MAX_KHZ 2000
 
-	ftdi_layout_init 0x0108 0x010b
-	ftdi_layout_signal nTRST -data 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0108 0x010b
+	ftdi layout_signal nTRST -data 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 # hilscher_nxhx_onboard.tcl:
 #interface ftdi
-#ftdi_vid_pid 0x0640 0x0028
+#ftdi vid_pid 0x0640 0x0028
 #
-#ftdi_layout_init 0x0308 0x030b
-#ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-#ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+#ftdi layout_init 0x0308 0x030b
+#ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+#ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 
 
 proc setup_interface_nxhx90_jtag {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXHX 90-JTAG"
-	ftdi_vid_pid 0x1939 0x002C
+	ftdi device_desc "NXHX 90-JTAG"
+	ftdi vid_pid 0x1939 0x002C
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 proc setup_interface_nxhx90_mc {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXHX 90-MC"
-	ftdi_vid_pid 0x1939 0x0031
+	ftdi device_desc "NXHX 90-MC"
+	ftdi vid_pid 0x1939 0x0031
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 proc setup_interface_nxeb90_spe {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXEB 90-SPE"
-	ftdi_vid_pid 0x1939 0x0032
+	ftdi device_desc "NXEB 90-SPE"
+	ftdi vid_pid 0x1939 0x0032
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 proc setup_interface_nrpeb_h90_re {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NRPEB H90-RE"
-	ftdi_vid_pid 0x1939 0x0029
+	ftdi device_desc "NRPEB H90-RE"
+	ftdi vid_pid 0x1939 0x0029
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 proc setup_interface_nxjtag_usb {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NXJTAG-USB"
-	ftdi_vid_pid 0x1939 0x0023
+	ftdi device_desc "NXJTAG-USB"
+	ftdi vid_pid 0x1939 0x0023
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 # Display name/device description:
@@ -184,13 +184,13 @@ proc setup_interface_olimex_arm_usb_tiny_h {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "Olimex OpenOCD JTAG ARM-USB-TINY-H"
-	ftdi_vid_pid 0x15ba 0x002a
+	ftdi device_desc "Olimex OpenOCD JTAG ARM-USB-TINY-H"
+	ftdi vid_pid 0x15ba 0x002a
 
-	ftdi_layout_init 0x0808 0x0a1b
-	ftdi_layout_signal nSRST -oe 0x0200
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal LED -data 0x0800
+	ftdi layout_init 0x0808 0x0a1b
+	ftdi layout_signal nSRST -oe 0x0200
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal LED -data 0x0800
 }
 
 # Amontec_JTAGkey
@@ -198,15 +198,15 @@ proc setup_interface_jtagkey {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "Amontec JTAGkey"
-	ftdi_vid_pid 0x0403 0xcff8
+	ftdi device_desc "Amontec JTAGkey"
+	ftdi vid_pid 0x0403 0xcff8
 
 	global ADAPTER_MAX_KHZ
 	set ADAPTER_MAX_KHZ 2000
 
-	ftdi_layout_init 0x0c08 0x0f1b
-	ftdi_layout_signal nTRST -data 0x0100 -noe 0x0400
-	ftdi_layout_signal nSRST -data 0x0200 -noe 0x0800
+	ftdi layout_init 0x0c08 0x0f1b
+	ftdi layout_signal nTRST -data 0x0100 -noe 0x0400
+	ftdi layout_signal nSRST -data 0x0200 -noe 0x0800
 }
 
 proc setup_interface_jlink {} {
@@ -218,12 +218,12 @@ proc setup_interface_netSHIELD90 {strLocation} {
 	adapter driver ftdi
 	adapter usb location $strLocation
 	transport select jtag
-	ftdi_device_desc "NSHIELD 90"
-	ftdi_vid_pid 0x1939 0x0034
+	ftdi device_desc "NSHIELD 90"
+	ftdi vid_pid 0x1939 0x0034
 
-	ftdi_layout_init 0x0308 0x030b
-	ftdi_layout_signal nTRST -data 0x0100 -oe 0x0100
-	ftdi_layout_signal nSRST -data 0x0200 -oe 0x0200
+	ftdi layout_init 0x0308 0x030b
+	ftdi layout_signal nTRST -data 0x0100 -oe 0x0100
+	ftdi layout_signal nSRST -data 0x0200 -oe 0x0200
 }
 
 # Configure an interface.
@@ -590,8 +590,8 @@ proc reset_netX_ARM926_ARM966 {} {
 
 proc netx90_unlock_write_reg {addr value} {
   set accesskey [mread32 0xff4012c0]
-  mww 0xff4012c0 [expr $accesskey]
-  mww [expr $addr] [expr $value]
+  mww 0xff4012c0 [expr {$accesskey}]
+  mww [expr {$addr}] [expr {$value}]
 }
 
 # Set the analog parameters to default values.
@@ -782,8 +782,8 @@ proc reset_netx90_COM {}  {
 
 proc set_firewall {addr value} {
   set accesskey [mread32 0xF408017C]
-  mww 0xF408017C [expr $accesskey]
-  mww [expr $addr] [expr $value]
+  mww 0xF408017C [expr {$accesskey}]
+  mww [expr {$addr}] [expr {$value}]
 }
 
 # A9 cannot access netX part per default, this firewalls need to be disabled from
@@ -906,8 +906,8 @@ proc netx4000_enable_tcm {} {
 	set SRT_CR7_CP15_DTCMRR_Size       2
 	set VAL_CR7_CP15_DTCMRR_Size_128KB 8
 
-	set ulItcm [expr $__ITCM_START_ADDRESS__  | $MSK_CR7_CP15_ITCMRR_Enable | ( $VAL_CR7_CP15_ITCMRR_Size_128KB << $SRT_CR7_CP15_ITCMRR_Size ) ]
-	set ulDtcm [expr $__DTCM_START_ADDRESS__  | $MSK_CR7_CP15_DTCMRR_Enable | ( $VAL_CR7_CP15_DTCMRR_Size_128KB << $SRT_CR7_CP15_DTCMRR_Size ) ]
+	set ulItcm [expr {$__ITCM_START_ADDRESS__  | $MSK_CR7_CP15_ITCMRR_Enable | ( $VAL_CR7_CP15_ITCMRR_Size_128KB << $SRT_CR7_CP15_ITCMRR_Size )} ]
+	set ulDtcm [expr {$__DTCM_START_ADDRESS__  | $MSK_CR7_CP15_DTCMRR_Enable | ( $VAL_CR7_CP15_DTCMRR_Size_128KB << $SRT_CR7_CP15_DTCMRR_Size )} ]
 
 	puts "netx 4000 Enable ITCM/DTCM"
 	puts [ format "ulItcm: %08x" $ulItcm ]

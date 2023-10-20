@@ -118,20 +118,20 @@ proc dpm_reset_write_back {ulDPMAddr iNumSteps ulCodeAddr} {
 	}	
 	
 	# Perform the last write in software.
-	mww phys $ulCodeAddr            0xE5901000; #       ldr r1, [r0]
-	mww phys [expr $ulCodeAddr + 4] 0xE5801000; #       str r1, [r0]
-	mww phys [expr $ulCodeAddr + 8] 0xEAFFFFFE; # loop: b loop	
+	mww phys        $ulCodeAddr       0xE5901000; #       ldr r1, [r0]
+	mww phys [expr {$ulCodeAddr + 4}] 0xE5801000; #       str r1, [r0]
+	mww phys [expr {$ulCodeAddr + 8}] 0xEAFFFFFE; # loop: b loop	
 	reg r0 $ulDPMAddr 
 	reg pc $ulCodeAddr 
 	reg cpsr 0x1f
-	resume	
+	resume
 }
 
 
 # Run the reset request sequence via DPM by 
 # writing the value sequence directly (without reading)
 proc dpm_reset_write_direct {ulAddr iNumSteps} {
-	for {set i 1; set val 0} {$i<$iNumSteps} {incr i; set val [expr $val + $val + 1]} {
+	for {set i 1; set val 0} {$i<$iNumSteps} {incr i; set val [expr {$val + $val + 1}]} {
 		puts "i=$i, val=$val"
 		mww phys $ulAddr $val
 	}	
@@ -261,7 +261,7 @@ proc reset_assert {} {
 	peek "Clock enable:      0x%08x" $ADDR_CLOCK_ENABLE
 	puts "Enable DPM clock"
 	mww phys $ADDR_ACCESS_KEY [mread32 $ADDR_ACCESS_KEY]
-	mww phys $ADDR_CLOCK_ENABLE [expr $MSK_CLOCK_ENABLE_DPM ]
+	mww phys $ADDR_CLOCK_ENABLE [expr {$MSK_CLOCK_ENABLE_DPM} ]
 	peek "Clock enable:       0x%08x" $ADDR_CLOCK_ENABLE
 
 	set resetctrl [ peek "Reset flags:0x%08x" $ADDR_RESET_CTRL ]
@@ -346,12 +346,12 @@ proc reset_assert_netx4000 {} {
 	peek "Clock enable value:" $ADDR_NX4000_CLK_ENABLE	
 	echo "enable DPM"
 	mww phys $ADDR_NX4000_ACCESS_KEY [mread32 $ADDR_NX4000_ACCESS_KEY]
-	mww phys $ADDR_NX4000_CLK_ENABLE [expr $MSK_NX4000_ENABLE_DPM_CLK ]
+	mww phys $ADDR_NX4000_CLK_ENABLE [expr {$MSK_NX4000_ENABLE_DPM_CLK} ]
 	peek "Clock enable value:" $ADDR_NX4000_CLK_ENABLE
 
 	peek "Reset mask: %08x" $ADDR_NX4000_RAP_SYSCTRL_RSTMASK
 	echo "Enable DPM and SWRST as reset source"
-	mww phys  $ADDR_NX4000_RAP_SYSCTRL_RSTMASK [expr $MSK_NX4000_RST_NETX_DPM + $MSK_NX4000_RST_SWRST ]
+	mww phys  $ADDR_NX4000_RAP_SYSCTRL_RSTMASK [expr {$MSK_NX4000_RST_NETX_DPM + $MSK_NX4000_RST_SWRST} ]
 	peek "Reset mask: %08x" $ADDR_NX4000_RAP_SYSCTRL_RSTMASK
 
 	set val [ peek "Reset flags: %08x" $ADDR_NX4000_RAP_SYSCTRL_RSTSTAT ]

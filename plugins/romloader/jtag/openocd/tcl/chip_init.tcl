@@ -58,10 +58,10 @@ proc setup_dcc_io {fEnableDCCOutput iChiptyp {ulSerialVectorAddr 0} {strDccCodeF
 			set iOffset 0
 		}
 
-		mww       $ulSerialVectorAddr         0                                    ; # Get
-		mww [expr $ulSerialVectorAddr + 4  ]  [expr $ulDccCodeAddr + $iOffset]     ; # Put
-		mww [expr $ulSerialVectorAddr + 8  ]  0                                    ; # Peek
-		mww [expr $ulSerialVectorAddr + 12 ]  [expr $ulDccCodeAddr + 4 + $iOffset] ; # Flush
+		mww        $ulSerialVectorAddr          0                                      ; # Get
+		mww [expr {$ulSerialVectorAddr + 4}  ]  [expr {$ulDccCodeAddr + $iOffset}]     ; # Put
+		mww [expr {$ulSerialVectorAddr + 8}  ]  0                                      ; # Peek
+		mww [expr {$ulSerialVectorAddr + 12} ]  [expr {$ulDccCodeAddr + 4 + $iOffset}] ; # Flush
 		
 		# reset buffer pointer
 		puts "Setting buffer pointer"
@@ -77,21 +77,21 @@ proc setup_dcc_io {fEnableDCCOutput iChiptyp {ulSerialVectorAddr 0} {strDccCodeF
 		
 	} else {
 		puts "Setting up for no DCC output (Clearing serial vectors)"
-		mww       $ulSerialVectorAddr         0 ; # Get
-		mww [expr $ulSerialVectorAddr + 4  ]  0 ; # Put
-		mww [expr $ulSerialVectorAddr + 8  ]  0 ; # Peek
-		mww [expr $ulSerialVectorAddr + 12 ]  0 ; # Flush
+		mww        $ulSerialVectorAddr          0 ; # Get
+		mww [expr {$ulSerialVectorAddr + 4}  ]  0 ; # Put
+		mww [expr {$ulSerialVectorAddr + 8}  ]  0 ; # Peek
+		mww [expr {$ulSerialVectorAddr + 12} ]  0 ; # Flush
 	}
 	
-	mdw       $ulSerialVectorAddr        
-	mdw [expr $ulSerialVectorAddr + 4  ] 
-	mdw [expr $ulSerialVectorAddr + 8  ] 
-	mdw [expr $ulSerialVectorAddr + 12 ] 
+	mdw        $ulSerialVectorAddr
+	mdw [expr {$ulSerialVectorAddr + 4}  ] 
+	mdw [expr {$ulSerialVectorAddr + 8}  ] 
+	mdw [expr {$ulSerialVectorAddr + 12} ] 
 	mdw $ulDccBufferPointerAddr
 }
 
 proc min {a b} {
-	return [expr $a < $b ? $a : $b]
+	return [expr {$a < $b ? $a : $b}]
 }
 
 proc init_chip {iChiptyp} {
@@ -251,7 +251,7 @@ proc init_chip {iChiptyp} {
 
 		proc unlock_asic_ctrl {} {
 			set accesskey [read_data32 0xff4012c0]
-			mww 0xff4012c0 [expr $accesskey]
+			mww 0xff4012c0 [expr {$accesskey}]
 		}
 
 		unlock_asic_ctrl
