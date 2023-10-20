@@ -38,19 +38,6 @@
 
 /*-----------------------------------*/
 
-#ifndef SWIGRUNTIME
-#include <swigluarun.h>
-
-/* swigluarun does not include the lua specific defines. Add them here. */
-typedef struct
-{
-	lua_State* L; /* the state */
-	int ref;      /* a ref in the lua global index */
-} SWIGLUA_REF;
-#endif
-
-/*-----------------------------------*/
-
 #define MUHKUH_PLUGIN_PUSH_ERROR(L,...) { lua_pushfstring(L,__VA_ARGS__); }
 #define MUHKUH_PLUGIN_EXIT_ERROR(L) { lua_error(L); }
 #define MUHKUH_PLUGIN_ERROR(L,...) { lua_pushfstring(L,__VA_ARGS__); lua_error(L); }
@@ -107,6 +94,7 @@ public:
 	virtual const char *get_name(void) const;
 	virtual const char *get_typ(void) const;
 
+	void setLogger(SWIGLUA_REF tLogger);
 
 protected:
 	char *clone_string(const char *pcStr, size_t sizMax);
@@ -141,6 +129,9 @@ public:
 	virtual int DetectInterfaces(lua_State *ptLuaStateForTableAccess, lua_State *ptLuaStateForTableAccessOptional) = 0;
 	virtual muhkuh_plugin *ClaimInterface(const muhkuh_plugin_reference *ptReference) = 0;
 	virtual bool ReleaseInterface(muhkuh_plugin *ptPlugin) = 0;
+
+	void setLogger(SWIGLUA_REF tLogger);
+	void copyLogger(muhkuh_log *ptLog);
 
 protected:
 	char *clone_string(const char *pcStr, size_t sizMax);

@@ -29,7 +29,33 @@
 
 
 muhkuh_log::muhkuh_log(void)
+ : m_ptLoggerState(NULL)
+ , m_iLoggerReference(LUA_NOREF)
 {
+}
+
+
+void muhkuh_log::setLogger(lua_State *ptLoggerState, int iLoggerReference)
+{
+	if( ptLoggerState!=NULL && iLoggerReference!=LUA_NOREF && iLoggerReference!=LUA_REFNIL )
+	{
+		m_ptLoggerState = ptLoggerState;
+		m_iLoggerReference = iLoggerReference;
+	}
+	else
+	{
+		m_ptLoggerState = NULL;
+		m_iLoggerReference = LUA_NOREF;
+	}
+}
+
+
+void muhkuh_log::copyLogger(muhkuh_log *ptOtherLogger)
+{
+	if( ptOtherLogger!=NULL )
+	{
+		ptOtherLogger->setLogger(this->m_ptLoggerState, this->m_iLoggerReference);
+	}
 }
 
 
@@ -189,7 +215,7 @@ void muhkuh_log::hexdump(MUHKUH_LOG_LEVEL_T tLevel, const uint8_t *pucData, uint
 			++sizChunkCnt;
 		}
 		/* Print the complete line. */
-		slog(tLevel, acBuffer);
+		this->slog(tLevel, acBuffer);
 		ulAddressCnt += sizChunkSize;
 	}
 }
@@ -226,7 +252,7 @@ void muhkuh_log::vlog(MUHKUH_LOG_LEVEL_T tLevel, const  char *pcFormat, va_list 
 				vsnprintf(pcMessage, iBufferSize, pcFormat, argptr);
 			}
 
-			slog(tLevel, pcMessage);
+			this->slog(tLevel, pcMessage);
 
 			free(pcMessage);
 		}
@@ -236,7 +262,98 @@ void muhkuh_log::vlog(MUHKUH_LOG_LEVEL_T tLevel, const  char *pcFormat, va_list 
 
 void muhkuh_log::slog(MUHKUH_LOG_LEVEL_T tLevel, const char *pcMessage)
 {
-	printf("[%d] %s\n", tLevel, pcMessage);
+	const char *pcLogMethod;
+	const LOG_LEVEL_METHOD_T *ptCnt;
+	const LOG_LEVEL_METHOD_T *ptEnd;
+	lua_State* ptL;
+	int iLoggerRef;
+	int iCnt;
+	int iType;
+
+
+	/* Refuse to log NULLs. */
+	if( pcMessage!=NULL )
+	{
+		pcLogMethod = NULL;
+		/* Get the logger method for the level. */
+		ptCnt = this->m_atLogLevelMethod;
+		ptEnd = this->m_atLogLevelMethod + (sizeof(this->m_atLogLevelMethod)/sizeof(this->m_atLogLevelMethod[0]));
+		while( ptCnt<ptEnd )
+		{
+			if( ptCnt->tLogLevel==tLevel )
+			{
+				pcLogMethod = ptCnt->pcMethod;
+				break;
+			}
+			++ptCnt;
+		}
+		/* Is the log level valid? */
+		if( pcLogMethod!=NULL )
+		{
+			/* Is the logger valid? */
+			ptL = m_ptLoggerState;
+			iLoggerRef = m_iLoggerReference;
+			if( ptL!=NULL && iLoggerRef!=LUA_NOREF && iLoggerRef!=LUA_REFNIL )
+			{
+				lua_rawgeti(ptL, LUA_REGISTRYINDEX, iLoggerRef);
+				/* Get the type of the referenced object. It must be a table. */
+				iType = lua_type(ptL, -1);
+				if( iType==LUA_TTABLE )
+				{
+					/* Get the "info" element for a test. */
+					lua_getfield(ptL, -1, pcLogMethod);
+					/* Remove the logger table from the stack. */
+					lua_remove(ptL, -2);
+
+					/* Is this really a function? */
+					iType = lua_type(ptL, -1);
+					if( iType==LUA_TFUNCTION )
+					{
+						/* Call the function with a message. */
+						lua_pushstring(ptL, pcMessage);
+						lua_call(ptL, 1, 0);
+					}
+					else
+					{
+						fprintf(
+							stderr,
+							"The '%s' element of the logger table should be a function, but it is a %s.\n",
+							pcLogMethod,
+							lua_typename(ptL, iType)
+						);
+						/* Remove the invalid function from the stack. */
+						lua_remove(ptL, -1);
+					}
+				}
+				else
+				{
+					fprintf(stderr, "The logger must be a table, but it is a %s.\n", lua_typename(ptL, iType));
+					/* Remove the invalid logger object from the stack. */
+					lua_remove(ptL, -1);
+				}
+			}
+			else
+			{
+				printf("[%s] %s\n", pcLogMethod, pcMessage);
+			}
+		}
+		else
+		{
+			fprintf(stderr, "Invalid log level %d. Message: %s\n", tLevel, pcMessage);
+		}
+	}
 }
 
 
+const muhkuh_log::LOG_LEVEL_METHOD_T muhkuh_log::m_atLogLevelMethod[9] =
+{
+	{ MUHKUH_LOG_LEVEL_EMERG,   "emerg" },
+	{ MUHKUH_LOG_LEVEL_ALERT,   "alert" },
+	{ MUHKUH_LOG_LEVEL_FATAL,   "fatal" },
+	{ MUHKUH_LOG_LEVEL_ERROR,   "error" },
+	{ MUHKUH_LOG_LEVEL_WARNING, "warning" },
+	{ MUHKUH_LOG_LEVEL_NOTICE,  "notice" },
+	{ MUHKUH_LOG_LEVEL_INFO,    "info" },
+	{ MUHKUH_LOG_LEVEL_DEBUG,   "debug" },
+	{ MUHKUH_LOG_LEVEL_TRACE,   "trace" }
+};

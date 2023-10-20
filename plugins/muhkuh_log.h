@@ -32,12 +32,27 @@
 #       define MUHKUH_EXPORT
 #endif
 
+
+#ifndef SWIGRUNTIME
+#       include <swigluarun.h>
+
+	/* swigluarun does not include the lua specific defines. Add them here. */
+	typedef struct
+	{
+		lua_State* L; /* the state */
+		int ref;      /* a ref in the lua global index */
+	} SWIGLUA_REF;
+#endif
+
 /*-----------------------------------*/
 
 class MUHKUH_EXPORT muhkuh_log
 {
 public:
 	muhkuh_log(void);
+
+	void setLogger(lua_State *ptLoggerState, int iLoggerReference);
+	void copyLogger(muhkuh_log *ptOtherLogger);
 
 	typedef enum MUHKUH_LOG_LEVEL_ENUM
 	{
@@ -51,6 +66,11 @@ public:
 		MUHKUH_LOG_LEVEL_DEBUG     = 8,
 		MUHKUH_LOG_LEVEL_TRACE     = 9
 	} MUHKUH_LOG_LEVEL_T;
+	typedef struct LOG_LEVEL_METHOD_STRUCT
+	{
+		MUHKUH_LOG_LEVEL_T tLogLevel;
+		const char *pcMethod;
+	} LOG_LEVEL_METHOD_T;
 
 	void emerg(const char *pcFormat, ...) /* __attribute__ ((format (printf, 1, 2))) */;
 	void alert(const char *pcFormat, ...) /* __attribute__ ((format (printf, 1, 2))) */;
@@ -65,6 +85,11 @@ public:
 	void hexdump(MUHKUH_LOG_LEVEL_T tLevel, const uint8_t *pucData, uint32_t ulSize);
 
 private:
+	static const LOG_LEVEL_METHOD_T m_atLogLevelMethod[9];
+
+	lua_State *m_ptLoggerState;
+	int m_iLoggerReference;
+
 	void vlog(MUHKUH_LOG_LEVEL_T tLevel, const char *pcFormat, va_list argptr);
 	void slog(MUHKUH_LOG_LEVEL_T tLevel, const char *pcMessage);
 };

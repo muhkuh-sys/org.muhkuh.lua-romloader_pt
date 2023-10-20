@@ -114,6 +114,15 @@ muhkuh_plugin::~muhkuh_plugin(void)
 }
 
 
+void muhkuh_plugin::setLogger(SWIGLUA_REF tLogger)
+{
+	if( m_ptLog!=NULL )
+	{
+		m_ptLog->setLogger(tLogger.L, tLogger.ref);
+	}
+}
+
+
 // returns the connection state of the device
 bool muhkuh_plugin::IsConnected(void) const
 {
@@ -355,6 +364,24 @@ muhkuh_plugin_provider::~muhkuh_plugin_provider(void)
 	if( m_ptPluginOptions!=NULL )
 	{
 		delete m_ptPluginOptions;
+	}
+}
+
+
+void muhkuh_plugin_provider::setLogger(SWIGLUA_REF tLogger)
+{
+	if( m_ptLog!=NULL )
+	{
+		m_ptLog->setLogger(tLogger.L, tLogger.ref);
+	}
+}
+
+
+void muhkuh_plugin_provider::copyLogger(muhkuh_log *ptLog)
+{
+	if( m_ptLog!=NULL && ptLog!=NULL )
+	{
+		m_ptLog->copyLogger(ptLog);
 	}
 }
 
