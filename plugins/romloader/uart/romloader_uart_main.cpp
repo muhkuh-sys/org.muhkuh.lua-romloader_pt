@@ -85,7 +85,7 @@ int romloader_uart_provider::DetectInterfaces(lua_State *ptLuaStateForTableAcces
 		{
 			/* TODO: check if the device is busy, but how */
 			fDeviceIsBusy = false;
-	
+
 			/* create the new instance */
 			//printf("create instance '%s'\n", *ppcDeviceNamesCnt);
 			ptReference = new romloader_uart_reference(*ppcDeviceNamesCnt, m_pcPluginId, fDeviceIsBusy, this);
@@ -299,10 +299,10 @@ bool romloader_uart::identify_loader(ROMLOADER_COMMANDSET_T *ptCmdSet, romloader
 						/* Get the size of the data part. */
 						sizPacket  = ((size_t)aucData[0]);
 						sizPacket |= ((size_t)aucData[1]) << 8U;
-						
+
 						/* The size information does not include the CRC. Add the 2 bytes here. */
 						sizPacket += 2;
-						
+
 						/* Is the size OK? */
 						if( sizPacket<11 )
 						{
@@ -432,7 +432,7 @@ bool romloader_uart::identify_loader(ROMLOADER_COMMANDSET_T *ptCmdSet, romloader
 												tCmdSet = ROMLOADER_COMMANDSET_MI2;
 												fResult = true;
 											}
-											else 
+											else
 */
 											if( ulMiVersionMaj==3 )
 											{
@@ -550,7 +550,7 @@ void romloader_uart::Connect(lua_State *ptClientData)
 							MUHKUH_PLUGIN_PUSH_ERROR(ptClientData, "%s(%p): failed to detect chip type!", m_pcName, this);
 						}
 					}
-					
+
 					if( fResult==true && ptFn!=NULL )
 					{
 						iResult = ptFn->update_device(m_tChiptyp);
@@ -625,7 +625,7 @@ void romloader_uart::Connect(lua_State *ptClientData)
 						 * netx90 Rev0 reports MI V3, chip type netX90 MPW  (0x03 0x0a)
 						 * next90 Rev1 reports MI V3, chip type netX90 Rev0 (0x03 0x0d)
 						 */
-						if( tChiptyp==ROMLOADER_CHIPTYP_NETX90_MPW 
+						if( tChiptyp==ROMLOADER_CHIPTYP_NETX90_MPW
 							|| tChiptyp==ROMLOADER_CHIPTYP_NETX90
 							|| tChiptyp==ROMLOADER_CHIPTYP_NETX90B)
 						{

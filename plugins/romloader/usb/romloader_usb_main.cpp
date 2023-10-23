@@ -275,7 +275,7 @@ romloader_usb::romloader_usb(const char *pcName, const char *pcTyp, const char *
 
 	/* create a new libusb context */
 	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName);
-	
+
 	DEBUGMSG(ZONE_FUNCTION, ("-romloader_usb::romloader_usb()\n"));
 }
 
