@@ -142,7 +142,7 @@ romloader_uart_device_linux::~romloader_uart_device_linux(void)
 
 
 	Close();
-	
+
 	iResult = pthread_mutex_destroy(&m_tRxDataAvail_Mutex);
 	if( iResult!=0 )
 	{
@@ -341,7 +341,7 @@ size_t romloader_uart_device_linux::SendRaw(const void *pvData, size_t sizData, 
 		}
 		sizBytesWritten += ssizBytesWritten;
 	} while( sizBytesWritten<sizData );
-	
+
 	return sizBytesWritten;
 }
 
@@ -499,7 +499,7 @@ size_t romloader_uart_device_linux::scanSysFs(char ***pppcPortNames)
 	}
 	else
 	{
-		fprintf(stderr, "romloader_uart_device_linux: trying to get the list of available tty devices from the sysfs folder %s\n", pcClassDir);
+//		fprintf(stderr, "romloader_uart_device_linux: trying to get the list of available tty devices from the sysfs folder %s\n", pcClassDir);
 
 		/* Does the sys folder exist? */
 		iResult = stat(pcClassDir, &tStatBuf);
