@@ -62,7 +62,6 @@ romloader_usb_device_libusb::romloader_usb_device_libusb(const char *pcPluginId)
 
 romloader_usb_device_libusb::~romloader_usb_device_libusb(void)
 {
-	printf("~romloader_usb_device_libusb\n");
 	Disconnect();
 
 	if( m_ptLibUsbContext!=NULL )
@@ -442,9 +441,9 @@ int romloader_usb_device_libusb::Connect(unsigned int uiBusNr, unsigned int uiDe
 		if( iResult==LIBUSB_SUCCESS )
 		{
 			/* NOTE: hier sollte eine generelle Entscheidung rein, ob das Gerät geupdated werden soll. */
-			
-			
-			
+
+
+
 			/* Does this device need an update? */
 			iResult = LIBUSB_ERROR_OTHER;
 			switch(m_tDeviceId.tCommandSet)
@@ -1161,7 +1160,7 @@ int romloader_usb_device_libusb::netx10_upgrade_romcode(libusb_device *ptDevice,
 	return iResult;
 }
 
-#if 0 
+#if 0
 libusb_device *romloader_usb_device_libusb::find_usb_device_by_location(unsigned char ucLocation_Bus, unsigned char ucLocation_Port)
 {
 	libusb_device *ptFound;
@@ -1174,7 +1173,7 @@ libusb_device *romloader_usb_device_libusb::find_usb_device_by_location(unsigned
 
 	/* Nothing found yet. */
 	ptFound = NULL;
-	
+
 	/* Get a list with all connected devices. */
 	ssizDevices = libusb_get_device_list(m_ptLibUsbContext, &pptUsbDevCnt);
 	pptUsbDevMax = pptUsbDevCnt + ssizDevices;
@@ -1183,16 +1182,16 @@ libusb_device *romloader_usb_device_libusb::find_usb_device_by_location(unsigned
 		/* Get the bus and the port of the device. */
 		ucDevice_Bus = libusb_get_bus_number(*pptUsbDevCnt);
 		ucDevice_Port = libusb_get_port_number(*pptUsbDevCnt);
-		
+
 		/* Is this the requested location? */
 		if( ucLocation_Bus==ucDevice_Bus && ucLocation_Port==ucDevice_Port )
 		{
 			/* Yes -> this is the device. */
 			ptFound = *pptUsbDevCnt;
-			
+
 			/* Reference the device. */
 			libusb_ref_device(ptFound);
-			
+
 			break;
 		}
 		++pptUsbDevCnt;
@@ -1211,7 +1210,7 @@ int romloader_usb_device_libusb::netx500_upgrade_romcode(libusb_device *ptDevice
 	unsigned char ucDevAddr_Port;
 	int iDelay;
 
-	
+
 	printf(". Found old netX500 romcode, starting download.\n");
 
 	iResult = libusb_open(ptDevice, &ptDevHandle);
@@ -1255,7 +1254,7 @@ int romloader_usb_device_libusb::netx500_upgrade_romcode(libusb_device *ptDevice
 				libusb_close(ptDevHandle);
 
 				SLEEP_MS(100);
-				
+
 				*pptUpdatedNetxDevice = ptDevice;
 				iResult = 0;
 			}

@@ -1,9 +1,9 @@
-puts "loading script jtag_detect_init.tcl"
+# puts "loading script jtag_detect_init.tcl"
 
 source [find netx_swreset.tcl]
 
-puts "__JTAG_RESET__ = $__JTAG_RESET__"
-puts "__JTAG_SPEED__ = $__JTAG_SPEED__"
+# puts "__JTAG_RESET__ = $__JTAG_RESET__"
+# puts "__JTAG_SPEED__ = $__JTAG_SPEED__"
 
 
 # todo/wishlist:
@@ -922,5 +922,5 @@ proc netx4000_enable_tcm {} {
 }
 
 
-echo "Done loading jtag_detect_init.tcl"
+# echo "Done loading jtag_detect_init.tcl"
 

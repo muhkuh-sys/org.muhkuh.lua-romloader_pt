@@ -1,4 +1,4 @@
-puts "Loading netx_swreset.tcl"
+# puts "Loading netx_swreset.tcl"
 
 # uses mread32
 

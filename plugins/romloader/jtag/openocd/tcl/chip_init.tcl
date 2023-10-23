@@ -445,4 +445,4 @@ proc init_chip {iChiptyp} {
 # Buffer pointer                0fe0        (netX 50: DTCM 0x04000fe0)
 # Serial Vectors netX50         0ff0 - 0fff (netX 50: DTCM 0x04000ff0)
 
-echo "Done loading chip_init.tcl"
+# echo "Done loading chip_init.tcl"
