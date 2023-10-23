@@ -251,6 +251,9 @@ romloader_usb::romloader_usb(const char *pcName, const char *pcTyp, romloader_us
 {
 	DEBUGMSG(ZONE_FUNCTION, ("+romloader_usb::romloader_usb(): pcName='%s', pcTyp='%s', ptProvider=%p, uiBusNr=%d, uiDeviceAdr=%d\n", pcName, pcTyp, ptProvider, uiBusNr, uiDeviceAdr));
 
+	/* Get the logger from the provider. */
+	ptProvider->copyLogger(m_ptLog);
+
 	/* create a new libusb context */
 	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName);
 
@@ -266,7 +269,10 @@ romloader_usb::romloader_usb(const char *pcName, const char *pcTyp, const char *
  , m_ptUsbDevice(NULL)
 {
 	DEBUGMSG(ZONE_FUNCTION, ("+romloader_usb::romloader_usb(): pcName='%s', pcTyp='%s', ptProvider=%p, uiBusNr=%d, uiDeviceAdr=%d\n", pcName, pcTyp, ptProvider, uiBusNr, uiDeviceAdr));
-	
+
+	/* Get the logger from the provider. */
+	ptProvider->copyLogger(m_ptLog);
+
 	/* create a new libusb context */
 	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName);
 	

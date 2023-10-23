@@ -416,6 +416,9 @@ romloader_jtag::romloader_jtag(const char *pcName, const char *pcTyp, romloader_
 
 	DEBUGMSG(ZONE_FUNCTION, ("+romloader_jtag::romloader_jtag(): pcName='%s', pcTyp='%s', ptProvider=%p, pcInterfaceName=%s, pcTargetName=%s\n", pcName, pcTyp, ptProvider, pcInterfaceName, pcTargetName));
 
+	/* Get the logger from the provider. */
+	ptProvider->copyLogger(m_ptLog);
+
 	/* Show the options. */
 	ptOptions = m_ptJtagProvider->GetOptions();
 	m_ptLog->debug("Options: jtag_reset=%d, jtag_frequency=%d", ptOptions->getOption_jtagReset(), ptOptions->getOption_jtagFrequencyKhz());

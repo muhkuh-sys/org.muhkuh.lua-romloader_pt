@@ -263,6 +263,9 @@ romloader_eth::romloader_eth(const char *pcName, const char *pcTyp, romloader_et
  : romloader(pcName, pcTyp, ptProvider)
  , m_ptEthDev(NULL)
 {
+	/* Get the logger from the provider. */
+	ptProvider->copyLogger(m_ptLog);
+
 	m_ptLog->trace("created in romloader_eth");
 
 	m_ptEthDev = new romloader_eth_device_platform(pcServerName);
@@ -311,7 +314,7 @@ void romloader_eth::Connect(lua_State *ptClientData)
 				 * netx90 Rev0 reports MI V3, chip type netX90 MPW  (0x03 0x0a) (not tested with ethernet)
 				 * next90 Rev1 reports MI V3, chip type netX90 Rev0 (0x03 0x0d)
 				 */
-				if( tChiptyp==ROMLOADER_CHIPTYP_NETX90_MPW 
+				if( tChiptyp==ROMLOADER_CHIPTYP_NETX90_MPW
 					|| tChiptyp==ROMLOADER_CHIPTYP_NETX90
 					|| tChiptyp==ROMLOADER_CHIPTYP_NETX90B)
 				{

@@ -189,6 +189,9 @@ romloader_uart::romloader_uart(const char *pcName, const char *pcTyp, romloader_
  : romloader(pcName, pcTyp, ptProvider)
  , m_ptUartDev(NULL)
 {
+	/* Get the logger from the provider. */
+	ptProvider->copyLogger(m_ptLog);
+
 	m_ptUartDev = new romloader_uart_device_platform(pcDeviceName);
 
 	m_ucMonitorSequence = 0;
