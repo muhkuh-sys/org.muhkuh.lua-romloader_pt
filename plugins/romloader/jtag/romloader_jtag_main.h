@@ -99,7 +99,7 @@ private:
 class romloader_jtag_provider : public muhkuh_plugin_provider
 {
 public:
-	romloader_jtag_provider(swig_type_info *p_romloader_jtag, swig_type_info *p_romloader_jtag_reference);
+	romloader_jtag_provider(swig_type_info *p_romloader_jtag, swig_type_info *p_romloader_jtag_reference, lua_State *ptLuaStateForTableAccessOptional);
 	~romloader_jtag_provider(void);
 
 	virtual romloader_jtag_options *GetOptions(void);

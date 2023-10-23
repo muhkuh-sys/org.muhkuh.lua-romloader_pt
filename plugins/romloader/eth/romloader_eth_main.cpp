@@ -109,9 +109,12 @@ const char *romloader_eth_options::getOption_interface(void)
 
 const char *romloader_eth_provider::m_pcPluginNamePattern = "romloader_eth_%s";
 
-romloader_eth_provider::romloader_eth_provider(swig_type_info *p_romloader_eth, swig_type_info *p_romloader_eth_reference)
+romloader_eth_provider::romloader_eth_provider(swig_type_info *p_romloader_eth, swig_type_info *p_romloader_eth_reference, lua_State *ptLuaStateForTableAccessOptional)
  : muhkuh_plugin_provider("romloader_eth")
 {
+	/* Set the logger from the first LUA argument. */
+	m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
+
 	/* get the romloader_eth lua type */
 	m_ptPluginTypeInfo = p_romloader_eth;
 	m_ptReferenceTypeInfo = p_romloader_eth_reference;

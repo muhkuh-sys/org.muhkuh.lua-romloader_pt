@@ -40,9 +40,12 @@
 
 const char *romloader_uart_provider::m_pcPluginNamePattern = "romloader_uart_%s";
 
-romloader_uart_provider::romloader_uart_provider(swig_type_info *p_romloader_uart, swig_type_info *p_romloader_uart_reference)
+romloader_uart_provider::romloader_uart_provider(swig_type_info *p_romloader_uart, swig_type_info *p_romloader_uart_reference, lua_State *ptLuaStateForTableAccessOptional)
  : muhkuh_plugin_provider("romloader_uart")
 {
+	/* Set the logger from the first LUA argument. */
+	m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
+
 	/* get the romloader_uart lua type */
 	m_ptPluginTypeInfo = p_romloader_uart;
 	m_ptReferenceTypeInfo = p_romloader_uart_reference;

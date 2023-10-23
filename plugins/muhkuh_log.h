@@ -51,8 +51,9 @@ class MUHKUH_EXPORT muhkuh_log
 public:
 	muhkuh_log(void);
 
-	void setLogger(lua_State *ptLoggerState, int iLoggerReference);
+	void setLogger(lua_State *ptLoggerState, int iStackPosition);
 	void copyLogger(muhkuh_log *ptOtherLogger);
+	void closeLogger(void);
 
 	typedef enum MUHKUH_LOG_LEVEL_ENUM
 	{

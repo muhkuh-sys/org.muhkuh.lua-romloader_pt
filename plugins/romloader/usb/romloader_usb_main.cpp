@@ -65,11 +65,14 @@
 
 const char *romloader_usb_provider::m_pcPluginNamePattern = "romloader_usb_%02x_%02x";
 
-romloader_usb_provider::romloader_usb_provider(swig_type_info *p_romloader_usb, swig_type_info *p_romloader_usb_reference)
+romloader_usb_provider::romloader_usb_provider(swig_type_info *p_romloader_usb, swig_type_info *p_romloader_usb_reference, lua_State *ptLuaStateForTableAccessOptional)
  : muhkuh_plugin_provider("romloader_usb")
  , m_ptUsbDevice(NULL)
 {
 	DEBUGMSG(ZONE_FUNCTION, ("+romloader_usb_provider::romloader_usb_provider(): p_romloader_usb=%p, p_romloader_usb_reference=%p\n", p_romloader_usb, p_romloader_usb_reference));
+
+	/* Set the logger from the first LUA argument. */
+	m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
 
 	/* Get the romloader_usb LUA type. */
 	m_ptPluginTypeInfo = p_romloader_usb;

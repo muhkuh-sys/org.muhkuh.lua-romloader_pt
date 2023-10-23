@@ -35,8 +35,51 @@ muhkuh_log::muhkuh_log(void)
 }
 
 
-void muhkuh_log::setLogger(lua_State *ptLoggerState, int iLoggerReference)
+void muhkuh_log::setLogger(lua_State *ptLoggerState, int iStackPosition)
 {
+	int iLoggerReference;
+	int iType;
+//	int iCnt;
+
+	/* Close any open logger. */
+	this->closeLogger();
+
+	iLoggerReference = LUA_NOREF;
+	if( ptLoggerState!=NULL )
+	{
+//		fprintf(stderr, "Stackpos: %d\n", iStackPosition);
+//		for(iCnt=-4; iCnt<5; ++iCnt)
+//		{
+//			fprintf(stderr, "Stack %d: %s\n", iCnt, lua_typename(ptLoggerState, lua_type(ptLoggerState, iCnt)));
+//		}
+
+		iType = lua_type(ptLoggerState, iStackPosition);
+		if( iType==LUA_TTABLE )
+		{
+			/* Add the table to the reference list. */
+			lua_pushvalue(ptLoggerState, iStackPosition);
+			iLoggerReference = luaL_ref(ptLoggerState, LUA_REGISTRYINDEX);
+		}
+		/* Throw an error for all other types but nil. */
+		else
+		{
+			iLoggerReference = LUA_NOREF;
+
+			if( iType!=LUA_TNIL )
+			{
+				fprintf(
+					stderr,
+					"The logger should be a table, but it is a %s.\n",
+					lua_typename(ptLoggerState, iType)
+				);
+			}
+//			else
+//			{
+//				fprintf(stderr, "setLogger(nil)\n");
+//			}
+		}
+	}
+
 	if( ptLoggerState!=NULL && iLoggerReference!=LUA_NOREF && iLoggerReference!=LUA_REFNIL )
 	{
 		m_ptLoggerState = ptLoggerState;
@@ -55,6 +98,17 @@ void muhkuh_log::copyLogger(muhkuh_log *ptOtherLogger)
 	if( ptOtherLogger!=NULL )
 	{
 		ptOtherLogger->setLogger(this->m_ptLoggerState, this->m_iLoggerReference);
+	}
+}
+
+
+void muhkuh_log::closeLogger(void)
+{
+	if( m_ptLoggerState!=NULL && m_iLoggerReference!=LUA_NOREF && m_iLoggerReference!=LUA_REFNIL )
+	{
+		luaL_unref(m_ptLoggerState, LUA_REGISTRYINDEX, m_iLoggerReference);
+		m_ptLoggerState = NULL;
+		m_iLoggerReference = LUA_NOREF;
 	}
 }
 

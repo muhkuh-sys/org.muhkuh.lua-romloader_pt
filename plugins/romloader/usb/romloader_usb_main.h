@@ -81,7 +81,7 @@ private:
 class romloader_usb_provider : public muhkuh_plugin_provider
 {
 public:
-	romloader_usb_provider(swig_type_info *p_romloader_usb, swig_type_info *p_romloader_usb_reference);
+	romloader_usb_provider(swig_type_info *p_romloader_usb, swig_type_info *p_romloader_usb_reference, lua_State *ptLuaStateForTableAccessOptional);
 	~romloader_usb_provider(void);
 
 	int DetectInterfaces(lua_State *ptLuaStateForTableAccess, lua_State *ptLuaStateForTableAccessOptional);

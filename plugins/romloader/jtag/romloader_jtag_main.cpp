@@ -86,7 +86,7 @@ private:
 
 const char *romloader_jtag_provider::m_pcPluginNamePattern = "romloader_jtag_%s@%s@%s";
 
-romloader_jtag_provider::romloader_jtag_provider(swig_type_info *p_romloader_jtag, swig_type_info *p_romloader_jtag_reference)
+romloader_jtag_provider::romloader_jtag_provider(swig_type_info *p_romloader_jtag, swig_type_info *p_romloader_jtag_reference, lua_State *ptLuaStateForTableAccessOptional)
  : muhkuh_plugin_provider("romloader_jtag")
  , m_fIsInitialized(false)
  , m_ptJtagDevice(NULL)
@@ -96,6 +96,9 @@ romloader_jtag_provider::romloader_jtag_provider(swig_type_info *p_romloader_jta
 
 
 	DEBUGMSG(ZONE_FUNCTION, ("+romloader_jtag_provider::romloader_jtag_provider(): p_romloader_jtag=%p, p_romloader_jtag_reference=%p\n", p_romloader_jtag, p_romloader_jtag_reference));
+
+	/* Set the logger from the first LUA argument. */
+	m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
 
 	/* Get the romloader_jtag LUA type. */
 	m_ptPluginTypeInfo = p_romloader_jtag;

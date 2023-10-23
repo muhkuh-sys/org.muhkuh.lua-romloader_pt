@@ -92,7 +92,7 @@ private:
 class romloader_uart_provider : public muhkuh_plugin_provider
 {
 public:
-	romloader_uart_provider(swig_type_info *p_romloader_uart, swig_type_info *p_romloader_uart_reference);
+	romloader_uart_provider(swig_type_info *p_romloader_uart, swig_type_info *p_romloader_uart_reference, lua_State *ptLuaStateForTableAccessOptional);
 	~romloader_uart_provider(void);
 
 	int DetectInterfaces(lua_State *ptLuaStateForTableAccess, lua_State *ptLuaStateForTableAccessOptional);

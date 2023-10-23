@@ -19,11 +19,16 @@
  */
 %luacode
 {
-	require("romloader")
-	if not _G.__MUHKUH_PLUGINS then
-		_G.__MUHKUH_PLUGINS = {}
-	end
-	table.insert(_G.__MUHKUH_PLUGINS, romloader_eth.romloader_eth_provider())
+  require("romloader")
+  if not _G.__MUHKUH_PLUGINS then
+    _G.__MUHKUH_PLUGINS = {}
+  end
+
+  if _G.__MUHKUH_PLUGIN_LOGGER~=nil then
+    table.insert(_G.__MUHKUH_PLUGINS, romloader_eth.romloader_eth_provider(_G.__MUHKUH_PLUGIN_LOGGER))
+  else
+    table.insert(_G.__MUHKUH_PLUGINS, romloader_eth.romloader_eth_provider())
+  end
 }
 #endif
 

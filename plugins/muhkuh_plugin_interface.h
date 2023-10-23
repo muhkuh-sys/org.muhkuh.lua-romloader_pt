@@ -94,7 +94,7 @@ public:
 	virtual const char *get_name(void) const;
 	virtual const char *get_typ(void) const;
 
-	void setLogger(SWIGLUA_REF tLogger);
+	void setLogger(lua_State *ptLuaStateForTableAccessOptional);
 
 protected:
 	char *clone_string(const char *pcStr, size_t sizMax);
@@ -130,7 +130,7 @@ public:
 	virtual muhkuh_plugin *ClaimInterface(const muhkuh_plugin_reference *ptReference) = 0;
 	virtual bool ReleaseInterface(muhkuh_plugin *ptPlugin) = 0;
 
-	void setLogger(SWIGLUA_REF tLogger);
+	void setLogger(lua_State *ptLuaStateForTableAccessOptional);
 	void copyLogger(muhkuh_log *ptLog);
 
 protected:

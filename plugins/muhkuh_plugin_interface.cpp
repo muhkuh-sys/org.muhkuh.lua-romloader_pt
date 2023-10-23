@@ -114,11 +114,11 @@ muhkuh_plugin::~muhkuh_plugin(void)
 }
 
 
-void muhkuh_plugin::setLogger(SWIGLUA_REF tLogger)
+void muhkuh_plugin::setLogger(lua_State *ptLuaStateForTableAccessOptional)
 {
 	if( m_ptLog!=NULL )
 	{
-		m_ptLog->setLogger(tLogger.L, tLogger.ref);
+		m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
 	}
 }
 
@@ -355,6 +355,11 @@ muhkuh_plugin_provider::~muhkuh_plugin_provider(void)
 {
 	if( m_ptLog!=NULL )
 	{
+		if( m_ptLog!=NULL )
+		{
+			m_ptLog->closeLogger();
+		}
+
 		delete m_ptLog;
 	}
 	if( m_pcPluginId!=NULL )
@@ -368,11 +373,12 @@ muhkuh_plugin_provider::~muhkuh_plugin_provider(void)
 }
 
 
-void muhkuh_plugin_provider::setLogger(SWIGLUA_REF tLogger)
+void muhkuh_plugin_provider::setLogger(lua_State *ptLuaStateForTableAccessOptional)
 {
 	if( m_ptLog!=NULL )
 	{
-		m_ptLog->setLogger(tLogger.L, tLogger.ref);
+		/* Set the logger from the first LUA argument. */
+		m_ptLog->setLogger(ptLuaStateForTableAccessOptional, -1);
 	}
 }
 
