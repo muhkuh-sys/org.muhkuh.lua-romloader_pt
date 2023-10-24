@@ -24,6 +24,7 @@
 
 
 #include "romloader_usb_device.h"
+#include "../../muhkuh_log.h"
 
 #include <errno.h>
 
@@ -48,10 +49,12 @@ class romloader_usb_reference;
 class romloader_usb_device_libusb : public romloader_usb_device
 {
 public:
-	romloader_usb_device_libusb(const char *pcPluginId);
+	romloader_usb_device_libusb(const char *pcPluginId, muhkuh_log *ptLog);
 	~romloader_usb_device_libusb(void);
 
 	const char *libusb_strerror(int iError);
+
+	static void logCallback(libusb_context *ctx, enum libusb_log_level level, const char *str);
 
 	int detect_interfaces(romloader_usb_reference ***ppptReferences, size_t *psizReferences, romloader_usb_provider *ptProvider);
 	void free_references(romloader_usb_reference **pptReferences, size_t sizReferences);
@@ -96,14 +99,16 @@ private:
 	int netx56_load_code(libusb_device_handle* ptDevHandle, const unsigned char* pucNetxCode, size_t sizNetxCode);
 	int netx56_start_code(libusb_device_handle *ptDevHandle, const unsigned char *pucNetxCode);
 	int netx56_upgrade_romcode(libusb_device *ptDevice, libusb_device **pptUpdatedNetxDevice);
-	
+
 /*	libusb_device *find_usb_device_by_location(unsigned char ucLocation_Bus, unsigned char ucLocation_Port); */
+
+	void logCallbackPrivate(libusb_context *ptCtx, enum libusb_log_level tLevel, const char *pcStr);
 
 	static const char *m_pcPluginNamePattern;
 
 	libusb_context *m_ptLibUsbContext;
 	libusb_device_handle *m_ptDevHandle;
-
+	muhkuh_log *m_ptLog;
 
 	typedef struct
 	{

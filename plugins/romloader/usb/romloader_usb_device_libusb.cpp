@@ -47,16 +47,29 @@
 
 /*-------------------------------------*/
 
+/* NOTE: This is a dirty hack. The libusb callback has no user data field.
+ *       The future will hopefully bring a a pure Lua plugin for USB, where
+ *       a lambda function can solve the problem.
+ */
+static romloader_usb_device_libusb *ptLogCallbackTarget = NULL;
 
-romloader_usb_device_libusb::romloader_usb_device_libusb(const char *pcPluginId)
+
+/*-------------------------------------*/
+
+
+romloader_usb_device_libusb::romloader_usb_device_libusb(const char *pcPluginId, muhkuh_log *ptLog)
  : romloader_usb_device(pcPluginId)
  , m_ptLibUsbContext(NULL)
  , m_ptDevHandle(NULL)
+ , m_ptLog(ptLog)
 {
+	ptLogCallbackTarget = this;
+
 	memset(&m_tDeviceId, 0, sizeof(NETX_USB_DEVICE_T));
 
 	libusb_init(&m_ptLibUsbContext);
 	libusb_set_option(m_ptLibUsbContext, LIBUSB_OPTION_LOG_LEVEL, LIBUSB_LOG_LEVEL_INFO);
+	libusb_set_log_cb(m_ptLibUsbContext, this->logCallback, LIBUSB_LOG_CB_GLOBAL);
 }
 
 
@@ -72,6 +85,34 @@ romloader_usb_device_libusb::~romloader_usb_device_libusb(void)
 
 
 const char *romloader_usb_device_libusb::m_pcPluginNamePattern = "romloader_usb_%02x_%02x";
+
+
+void romloader_usb_device_libusb::logCallback(libusb_context *ptCtx, enum libusb_log_level tLevel, const char *pcStr)
+{
+	if( ptLogCallbackTarget!=NULL )
+	{
+		ptLogCallbackTarget->logCallbackPrivate(ptCtx, tLevel, pcStr);
+	}
+}
+
+
+void romloader_usb_device_libusb::logCallbackPrivate(libusb_context *ptCtx, enum libusb_log_level tLevel, const char *pcStr)
+{
+	if( m_ptLog!=NULL )
+	{
+		/* Pass all libusb messages with the level "debug" to the logging system.
+		 *
+		 * From the libusb API description (https://libusb.sourceforge.io/api-1.0/);
+		 * "Debug message logging
+		 *  ... These messages are not intended to being passed to your application user"
+		 */
+		m_ptLog->debug("%s", pcStr);
+	}
+	else
+	{
+		fprintf(stderr, "%s\n", pcStr);
+	}
+}
 
 
 int romloader_usb_device_libusb::libusb_reset_and_close_device(void)

@@ -79,7 +79,7 @@ romloader_usb_provider::romloader_usb_provider(swig_type_info *p_romloader_usb, 
 	m_ptReferenceTypeInfo = p_romloader_usb_reference;
 
 	/* Create a new libusb context */
-	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcPluginId);
+	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcPluginId, m_ptLog);
 
 	DEBUGMSG(ZONE_FUNCTION, ("-romloader_usb_provider::romloader_usb_provider()\n"));
 }
@@ -258,7 +258,7 @@ romloader_usb::romloader_usb(const char *pcName, const char *pcTyp, romloader_us
 	ptProvider->copyLogger(m_ptLog);
 
 	/* create a new libusb context */
-	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName);
+	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName, m_ptLog);
 
 	DEBUGMSG(ZONE_FUNCTION, ("-romloader_usb::romloader_usb()\n"));
 }
@@ -277,7 +277,7 @@ romloader_usb::romloader_usb(const char *pcName, const char *pcTyp, const char *
 	ptProvider->copyLogger(m_ptLog);
 
 	/* create a new libusb context */
-	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName);
+	m_ptUsbDevice = new romloader_usb_device_libusb(m_pcName, m_ptLog);
 
 	DEBUGMSG(ZONE_FUNCTION, ("-romloader_usb::romloader_usb()\n"));
 }
