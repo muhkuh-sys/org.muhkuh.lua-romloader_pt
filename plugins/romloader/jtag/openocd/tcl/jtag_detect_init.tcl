@@ -510,9 +510,7 @@ proc probe_cpu {strCpu} {
 # ###################################################################
 
 proc mread32 {addr} {
-  set value(0) 0
-  mem2array value 32 $addr 1
-  return $value(0)
+  return [read_memory $addr 32 1]
 }
 
 # todo: pass target name from plugin

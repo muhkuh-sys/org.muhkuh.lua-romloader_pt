@@ -244,9 +244,7 @@ proc init_chip {iChiptyp} {
 		
 		puts "Configuring pad ctrl for MMIO4-7 (input, disable pull-down)"
 		proc read_data32 {addr} {
-			set value(0) 0
-			mem2array value 32 $addr 1
-			return $value(0)
+			return [read_memory $addr 32 1]
 		}
 
 		proc unlock_asic_ctrl {} {
@@ -296,9 +294,7 @@ proc init_chip {iChiptyp} {
 		puts "Init netIOL (preliminary)"
 		
 		proc read_data32 {addr} {
-			set value(0) 0
-			mem2array value 32 $addr 1
-			return $value(0)
+			return [read_memory $addr 32 1]
 		}
 
 		# Initialize the PLL.
