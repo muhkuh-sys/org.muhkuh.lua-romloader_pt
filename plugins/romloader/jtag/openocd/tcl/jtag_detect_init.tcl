@@ -279,12 +279,13 @@ proc probe_interface {} {
 # ###################################################################
 
 set KNOWN_CPUS {
-	{ "netX_ARM966"    probe_cpu_netx_arm966 }
-	{ "netX_ARM926"    probe_cpu_netx_arm926 }
-	{ "netX4000_R7"    probe_cpu_netx4000_r7 }
-	{ "netX90_MPW_COM" probe_cpu_netx90_mpw_com }
-	{ "netX90_COM"     probe_cpu_netx90_com }
-	{ "netIOL"         probe_cpu_netiol }
+	{ "netX_ARM966"        probe_cpu_netx_arm966 }
+	{ "XIO2001_netXARM926" probe_cpu_xio2001_netx_arm926 }
+	{ "netX_ARM926"        probe_cpu_netx_arm926 }
+	{ "netX4000_R7"        probe_cpu_netx4000_r7 }
+	{ "netX90_MPW_COM"     probe_cpu_netx90_mpw_com }
+	{ "netX90_COM"         probe_cpu_netx90_com }
+	{ "netIOL"             probe_cpu_netiol }
 }
 
 proc probe_cpu_netx_arm966 {} {
@@ -345,6 +346,36 @@ proc probe_cpu_netx_arm926 {} {
 		set strTarget ARM926
 	} else {
 		return -code error "Failed to probe netX_ARM926."
+	}
+}
+
+proc probe_cpu_xio2001_netx_arm926 {} {
+	echo "probe_cpu XIO2001 with netX_ARM926"
+
+	global SC_CFG_RESULT
+	global __JTAG_RESET__
+
+	jtag newtap netX_ARM926 cpu -irlen 4 -ircapture 1 -irmask 0xf -expected-id 0x07926021
+	jtag newtap XIO2001 tap -irlen 5 -expected-id 0x00000000
+	jtag configure netX_ARM926.cpu -event setup { global SC_CFG_RESULT ; echo {Yay} ; set SC_CFG_RESULT {OK} }
+	jtag init
+
+	if { $SC_CFG_RESULT=={OK} } {
+		target create netX_ARM926.cpu arm926ejs -endian little -chain-position netX_ARM926.cpu
+		if { $__JTAG_RESET__==1 } {
+			netX_ARM926.cpu configure -event reset-assert { reset_assert }
+			netX_ARM926.cpu configure -event reset-deassert-post { reset_deassert_post }
+		}
+		netX_ARM926.cpu configure -event reset-init { echo {netX_ARM926.cpu  reset-init event}; halt }
+		netX_ARM926.cpu configure -work-area-phys 0x0380 -work-area-size 0x0080 -work-area-backup 1
+
+		global strTarget
+		set strTarget XIO2001_ARM926
+
+		global ADAPTER_MAX_KHZ
+		set ADAPTER_MAX_KHZ 50
+	} else {
+		return -code error "Failed to probe XIO with netX_ARM926."
 	}
 }
 
