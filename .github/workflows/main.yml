@@ -76,6 +76,12 @@ jobs:
       uses: actions/checkout@v4
       with:
         submodules: recursive
+    - name: Download firmware
+      uses: actions/download-artifact@v2
+      with:
+        name: firmware
+    - name: Depack firmware
+      run: tar fvxz firmware/firmware.tar.gz
     - name: Run build in container
       run: |
         docker run --rm \
@@ -86,7 +92,8 @@ jobs:
           ./build_artifact.py \
             ${{ matrix.platform.distribution-id }} \
             ${{ matrix.platform.distribution-version }} \
-            ${{ matrix.platform.cpu-architecture }}
+            ${{ matrix.platform.cpu-architecture }} \
+            --cmake-define BUILDCFG_SKIP_NETX_FW=ON
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
