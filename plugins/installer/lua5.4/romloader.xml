@@ -4,7 +4,7 @@
 	      module="romloader_pt"
 	      artifact="lua5.4-romloader"
 	      version="@PROJECT_VERSION@"
-	      vcs-id="@PROJECT_VERSION_VCS_LONG@"
+	      vcs-id="@PROJECT_VERSION_VCS@"
 	      extension="tar.xz"
 	      platform="@JONCHKI_PLATFORM@">
 		<license name="GPL-2.0"/>
@@ -18,4 +18,10 @@
 		<dependency group="org.lua" module="lua" artifact="lua"/>
 		<dependency group="org.openocd" module="openocd_pt" artifact="openocd" version="0.12"/>
 	</dependencies>
+	<actions>
+		<!-- Jonchki is only used to install the build dependencies. Packing the artifact is done with CMake. -->
+		<action name="pack">
+		  return true
+		</action>
+	</actions>
 </jonchki-artifact>
