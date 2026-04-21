@@ -11,7 +11,7 @@ on:
 jobs:
   netxfirmware:
     runs-on: ubuntu-latest
-    container: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
+    container: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
