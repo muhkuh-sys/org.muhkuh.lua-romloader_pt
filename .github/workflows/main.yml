@@ -82,7 +82,7 @@ jobs:
         name: firmware
         skip-decompress: false
     - name: Depack firmware
-      run: ls -la && tar fvxz firmware.tar.gz
+      run: tar fvxz firmware.tar.gz
     - name: Run build in container
       run: |
         docker run --rm \
