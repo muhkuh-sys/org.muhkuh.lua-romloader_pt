@@ -80,7 +80,6 @@ jobs:
       uses: actions/download-artifact@v7
       with:
         name: firmware
-        skip-decompress: false
     - name: Depack firmware
       run: tar fvxz firmware.tar.gz
     - name: Run build in container
