@@ -11,17 +11,16 @@ on:
 jobs:
   netxfirmware:
     runs-on: ubuntu-latest
-    container: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
+    container: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
     steps:
     - name: Checkout repository
-      # Use the old checkout v1 here. The newer v2 requires git 2.28 which is not available in the standard distribution.
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: Build netX firmware
       run: python3 mbs/mbs
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: firmware
         path: targets/firmware.tar.gz
@@ -32,69 +31,65 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - # Ubuntu 18.04 x86
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_1804_x86:latest
-          distribution-id: ubuntu
-          distribution-version: "18.04"
-          cpu-architecture: x86
-        - # Ubuntu 18.04 x86_64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_1804_x86_64:latest
-          distribution-id: ubuntu
-          distribution-version: "18.04"
-          cpu-architecture: x86_64
-        - # Ubuntu 18.04 arm64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_1804_x86_64:latest
-          distribution-id: ubuntu
-          distribution-version: "18.04"
-          cpu-architecture: arm64
-        - # Ubuntu 20.04 x86_64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
-          distribution-id: ubuntu
-          distribution-version: "20.04"
-          cpu-architecture: x86_64
-        - # Ubuntu 20.04 arm64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2004_x86_64:latest
-          distribution-id: ubuntu
-          distribution-version: "20.04"
-          cpu-architecture: arm64
-        - # Ubuntu 22.04 x86_64
+        - name: Ubuntu 22.04 x86_64
           image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
           distribution-id: ubuntu
           distribution-version: "22.04"
           cpu-architecture: x86_64
-        - # Ubuntu 22.04 armhf
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
-          distribution-id: ubuntu
-          distribution-version: "22.04"
-          cpu-architecture: armhf
-        - # Ubuntu 22.04 arm64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
+          os: ubuntu-latest
+        - name: Ubuntu 22.04 arm64
+          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_arm64:latest
           distribution-id: ubuntu
           distribution-version: "22.04"
           cpu-architecture: arm64
-        - # Ubuntu 22.04 riscv64
-          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_x86_64:latest
+          os: ubuntu-latest
+        - name: Ubuntu 22.04 riscv64
+          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2204_riscv64:latest
           distribution-id: ubuntu
           distribution-version: "22.04"
           cpu-architecture: riscv64
-    container: ${{ matrix.platform.image }}
+          os: uubuntu-latest
+        - name: Ubuntu 24.04 x86_64
+          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2404_x86_64:latest
+          distribution-id: ubuntu
+          distribution-version: "24.04"
+          cpu-architecture: x86_64
+          os: ubuntu-latest
+        - name: Ubuntu 24.04 arm64
+          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2404_arm64:latest
+          distribution-id: ubuntu
+          distribution-version: "24.04"
+          cpu-architecture: arm64
+          os: ubuntu-latest
+        - name: Ubuntu 24.04 riscv64
+          image: ghcr.io/muhkuh-sys/mbs_ubuntu_2404_riscv64:latest
+          distribution-id: ubuntu
+          distribution-version: "24.04"
+          cpu-architecture: riscv64
+          os: ubuntu-latest
     steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+      with:
+        platforms: linux/arm64, linux/riscv64
     - name: Checkout repository
-      # Use the old checkout v1 here. The newer v2 requires git 2.28 which is not available in the standard distribution.
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
       with:
         submodules: recursive
-    - name: Download firmware
-      # Use the old download-artifact v1 here. The newer v2 does not work with 32bit containers.
-      uses: actions/download-artifact@v1
-      with:
-        name: firmware
-    - name: Depack firmware
-      run: tar fvxz firmware/firmware.tar.gz
-    - name: Build
-      run: ./build_artifact.py ${{ matrix.platform.distribution-id }} ${{ matrix.platform.distribution-version }} ${{ matrix.platform.cpu-architecture }} --cmake-define BUILDCFG_SKIP_NETX_FW=ON
+    - name: Run build in container
+      run: |
+        docker run --rm \
+          --env VCS_GIT_DESCRIBE_OUTPUT=$(git describe --abbrev=12 --always --dirty=+) \
+          --volume "${PWD}:/workspace" \
+          --workdir /workspace \
+          ${{ matrix.platform.image }} \
+          ./build_artifact.py \
+            ${{ matrix.platform.distribution-id }} \
+            ${{ matrix.platform.distribution-version }} \
+            ${{ matrix.platform.cpu-architecture }}
+
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: artifacts_${{ matrix.platform.distribution-id }}_${{ matrix.platform.distribution-version }}_${{ matrix.platform.cpu-architecture }}
         path: build/repository
