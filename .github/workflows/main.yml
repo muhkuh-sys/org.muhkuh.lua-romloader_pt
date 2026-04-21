@@ -24,7 +24,6 @@ jobs:
       with:
         name: firmware
         path: targets/firmware.tar.gz
-        archive: false
   build:
     needs: netxfirmware
     runs-on: ubuntu-latest
@@ -81,8 +80,9 @@ jobs:
       uses: actions/download-artifact@v7
       with:
         name: firmware
+        skip-decompress: false
     - name: Depack firmware
-      run: tar fvxz firmware/firmware.tar.gz
+      run: ls -la && tar fvxz firmware.tar.gz
     - name: Run build in container
       run: |
         docker run --rm \
