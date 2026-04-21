@@ -87,7 +87,7 @@ INCLUDE(CPack)
 
 # NOTE: No "INSTALL" here, they are in the sub folders.
 
-CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
+CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install.lua
                ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
                @ONLY)
 
@@ -110,16 +110,3 @@ ADD_CUSTOM_TARGET(pack
                   COMMAND "${PYTHON_INTERPRETER}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-romloader-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
                   COMMAND "${PYTHON_INTERPRETER}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-romloader-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.tar.xz
                   COMMENT "Pack the artifact and generate the hashes...")
-
-
-#-----------------------------------------------------------------------------
-#
-# Filter the pom.xml file.
-#
-SET(POM_ARTIFACT_ID  "lua${BUILDCFG_LUA_VERSION}-romloader")
-SET(POM_GROUP_ID     "org.muhkuh.lua")
-SET(POM_VERSION      "${PROJECT_VERSION}")
-SET(POM_PACKAGING    "tar.xz")
-CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/pom.xml
-               ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-romloader-${PROJECT_VERSION}.pom
-               @ONLY)
