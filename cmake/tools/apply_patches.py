@@ -2,7 +2,6 @@ import logging
 import os
 import os.path
 import patch
-import string
 
 
 def apply_diffs(strWorkingFolder, strPatchFolder, uiStrip):
@@ -79,22 +78,22 @@ def copy_list(strWorkingFolder, strCopyList):
         # Count lines starting with 1.
         uiLineCnt += 1
         # Strip whitespace at the beginning and end of the file.
-        strLine = string.strip(strLine)
+        strLine = strLine.strip()
         # Ignore empty lines or comments (starting with "#").
         if len(strLine) != 0 and strLine[0] != '#':
             # Split the line by commata. There should be 2 elements.
-            astrArgs = string.split(strLine, ',')
+            astrArgs = strLine.split(',')
             if len(astrArgs) != 2:
-                raise Exception((
-                    'Invalid entry in copy list "%s" line %d. ' +
-                    'Expected one comma.'
-                ) % (
-                    strCopyList,
-                    uiLineCnt
-                ))
+                raise Exception(
+                    'Invalid entry in copy list "%s" line %d. '
+                    'Expected one comma.' % (
+                        strCopyList,
+                        uiLineCnt
+                    )
+                )
             # Strip whitespace from both arguments.
-            strSrc = string.strip(astrArgs[0])
-            strDst = string.strip(astrArgs[1])
+            strSrc = astrArgs[0].strip()
+            strDst = astrArgs[1].strip()
             print('Copy file "%s" -> "%s".' % (strSrc, strDst))
             __copy_file(strSrc, strDst)
     tFile.close()
@@ -143,8 +142,8 @@ def main():
         required=False,
         default=None,
         help=(
-            'process FILE as a list of SOURCE,DESTINATION entries ' +
-            'of files to copy'
+            'process FILE as a list of SOURCE,DESTINATION entries of '
+            'files to copy'
         ),
         metavar='PATH'
     )

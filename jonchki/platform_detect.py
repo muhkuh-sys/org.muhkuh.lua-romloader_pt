@@ -42,41 +42,18 @@ class PlatformDetect:
 
         return strCpuArchitecture
 
-    def __linux_get_os_architecture_getconf(self):
-        strCpuArchitecture = None
-
-        # Try to parse the output of the 'getconf LONG_BIT' command.
-        strOutput = subprocess.check_output(['getconf', 'LONG_BIT']).decode(
-            "utf-8",
-            "replace"
-        )
-        strOutputStrip = strOutput.strip()
-        if strOutputStrip == '32':
-            strCpuArchitecture = 'x86'
-        elif strOutputStrip == '64':
-            strCpuArchitecture = 'x86_64'
-
-        return strCpuArchitecture
-
-    def __linux_get_cpu_architecture_lscpu(self):
+    def __linux_get_dpkg_architecture(self):
         strCpuArchitecture = None
         astrReplacements = {
-            'i386': 'x86',
-            'i486': 'x86',
-            'i586': 'x86',
-            'i686': 'x86'
+            'amd64': 'x86_64'
         }
 
-        # Try to parse the output of the 'lscpu' command.
-        strOutput = subprocess.check_output(['lscpu']).decode(
+        # Try to get the architecture from the 'dpkg' command.
+        strCpuArchitecture = subprocess.check_output(['dpkg', '--print-architecture']).decode(
             "utf-8",
             "replace"
-        )
-        tMatch = re.search(r'Architecture: *(\S+)', strOutput)
-        if tMatch is None:
-            raise Exception('Failed to get the CPU architecture with "lscpu".')
+        ).strip()
 
-        strCpuArchitecture = tMatch.group(1)
         # Replace the CPU architectures found in the list.
         if strCpuArchitecture in astrReplacements:
             strCpuArchitecture = astrReplacements[strCpuArchitecture]
@@ -127,12 +104,7 @@ class PlatformDetect:
             # This is a Linux.
 
             # Detect the CPU architecture.
-            # Prefer the OS architecture over the CPU architecture to honour a
-            # 32bit OS on a 64bit CPU. This happens with a 32bit Docker
-            # container on a 64bit host.
-            strCpuArch = self.__linux_get_os_architecture_getconf()
-            if strCpuArch is None:
-                strCpuArch = self.__linux_get_cpu_architecture_lscpu()
+            strCpuArch = self.__linux_get_dpkg_architecture()
             self.strHostCpuArchitecture = strCpuArch
 
             # Detect the distribution.
