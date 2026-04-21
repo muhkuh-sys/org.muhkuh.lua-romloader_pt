@@ -78,7 +78,7 @@ jobs:
       with:
         submodules: recursive
     - name: Download firmware
-      uses: actions/download-artifact@v8
+      uses: actions/download-artifact@v7
       with:
         name: firmware
     - name: Depack firmware
@@ -97,7 +97,7 @@ jobs:
             --cmake-define BUILDCFG_SKIP_NETX_FW=ON
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: artifacts_${{ matrix.platform.distribution-id }}_${{ matrix.platform.distribution-version }}_${{ matrix.platform.cpu-architecture }}
         path: build/repository
